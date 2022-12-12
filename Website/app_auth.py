@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, request
-from .app_models import User, Post, Like, Comment, Following, Followers, db
+from .app_models import User, Post, Like, Comment, Following, Follower, db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 from sqlalchemy.orm import Session
@@ -77,17 +77,17 @@ def signup():
 # def profile():
 #     return render_template('profile_page.html')
 
-@app_auth.route('/followers', methods=['GET'])
+@app_auth.route('/follower', methods=['GET'])
 @login_required
-def followers():
+def follower():
     with Session(engine) as session:
-        followers_lis = session.query(Followers).all()
+        follower_lis = session.query(follower).all()
 
 
-        # us = Followers.query.filter_by(user_id=1).all()
-        print(followers_lis)
+        # us = follower.query.filter_by(user_id=1).all()
+        print(follower_lis)
 
-        return render_template('followers_page.html', user=followers_lis)
+        return render_template('follower_page.html', user=follower_lis)
 
 
 @app_auth.route('/profile', methods=['GET', 'POST'])
