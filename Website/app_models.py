@@ -1,6 +1,6 @@
 from . import db
 from flask_login import UserMixin
-from sqlalchemy import func
+from sqlalchemy import func, ForeignKey
 from os import path
 
 
@@ -9,6 +9,8 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String(20))
     user_name = db.Column(db.String(20), unique=True)
     password = db.Column(db.String(20))
+
+    followers = db.relationship('Follower')
 
 
 class Post(db.Model):
@@ -46,5 +48,14 @@ class Following(db.Model):
 
 class Follower(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer)
-    follower = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    follower_id = db.Column(db.Integer)
+
+
+def init_db():
+    db.create_all()
+
+
+if __name__ == '__main__':
+    print("created")
+    init_db()

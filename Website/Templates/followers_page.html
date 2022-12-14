@@ -5,15 +5,18 @@
 <h3>Here You will see the list of your followers.</h3>
 
 <ul class="list-group list-group-flush" id="notes">
-<!--    {% if user.followers %}-->
-    {% for note in user.followers %}
+
+    {% for flwr in user.followers %}
     <li class="list-group-item d-flex justify-content-between align-items-center">
-        {{ note }}
+        {{ flwr.id }} {{ user.query.filter_by(id=flwr.follower_id).first().name }}
+        {{ user.query.filter_by(id=flwr.follower_id).first().user_name }}
+        {{ user.user_name }}
+        <button type="button" onClick="removeFollower('{{ flwr.id }}', '{{ user.user_name }}')">
+            Remove Follower
+        </button>
     </li>
     {% endfor %}
-<!--    {% else %}-->
-<!--        <h>There is nothing to show you</h>-->
-<!--    {% endif %}-->
+
 
 </ul>
 

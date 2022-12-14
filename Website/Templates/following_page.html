@@ -3,5 +3,11 @@
 {% block content %}
 
 <h3>Here You will see list of the people you follow.</h3>
+<h2>Hello!,{{ user_name.user_name }}</h2>
+
+<form action="/delete-follow/{{ user_name.user_name }}" method="get">
+  <button type="submit">Delete</button>
+</form>
+
 
 {% endblock %}

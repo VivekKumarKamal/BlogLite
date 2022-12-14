@@ -2,6 +2,19 @@
 {% block title %}Feed{% endblock %}
 {% block content %}
 
-<h3>Here You will see all the post of people you follow.</h3>
+<h3>Here You will see all the post of people you follow.  {{ user.user_name }}</h3>
+
+
+
+    <div class="posts">
+        <div class="post">
+          <img src="https://placekitten.com/g/300/300" alt="A cute kitten">
+          <p>Caption for the cute kitten</p>
+        </div>
+        <div class="post">
+          <img src="https://placekitten.com/g/300/300" alt="Another cute kitten">
+          <p>Caption for the other cute kitten</p>
+        </div>
+    </div>
 
 {% endblock %}

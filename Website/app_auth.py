@@ -3,12 +3,13 @@ from .app_models import User, Post, Like, Comment, Following, Follower, db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 from sqlalchemy.orm import Session
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, select, exc
 from . import DB_NAME
-
+import sqlite3
 
 engine = create_engine(f"sqlite:///./{DB_NAME}")
 app_auth = Blueprint('app_auth', __name__)
+
 
 
 @app_auth.route('/login', methods=['GET', 'POST'])
@@ -18,11 +19,14 @@ def login():
         password = request.form.get('password')
 
         user = User.query.filter_by(user_name=user_name).first()
+
+
         if user:
             # if check_password_hash(user.password, password):
             if password == user.password:
                 flash('Logged in', category='success')
                 login_user(user, remember=True)
+
                 return redirect(url_for('app_views.app_feed'))
             else:
                 flash("Incorrect Password", category='error')
@@ -65,11 +69,11 @@ def signup():
 
             flash('Account Created!', category='success')
             login_user(new_user, remember=True)
-            # print("created")
 
-            return redirect(url_for('app_auth.profile'))
 
-    return render_template('sign_up.html')
+            return redirect(url_for('app_auth.profile', user=current_user, user_name=new_user.user_name))
+
+    return render_template('sign_up.html', user=current_user)
 
 
 # @app_auth.route('/profile', methods=['GET'])
@@ -77,30 +81,40 @@ def signup():
 # def profile():
 #     return render_template('profile_page.html')
 
-@app_auth.route('/follower', methods=['GET'])
+@app_auth.route('/followers/<user_name>', methods=['GET'])
 @login_required
-def follower():
-    with Session(engine) as session:
-        follower_lis = session.query(follower).all()
+def follower(user_name):
+    # with Session(engine) as session:
+    #     follower_lis = session.execute(select(Follower.follower_id).where(Follower.user_id == id)).all()
+    #
+    #
+    #     # us = follower.query.filter_by(user_id=1).all()
+    #     print(follower_lis)
+    user = User.query.filter_by(user_name=user_name).first()
+    # follower_user_names = []
+    # for a in user.followers:
+    #     name = User.query.filter_by(id=a.follower_id).first()
+    #     follower_user_names.append(name)
+
+    return render_template('followers_page.html', user=user)
 
 
-        # us = follower.query.filter_by(user_id=1).all()
-        print(follower_lis)
-
-        return render_template('follower_page.html', user=follower_lis)
-
-
-@app_auth.route('/profile', methods=['GET', 'POST'])
+@app_auth.route('/profile/<user_name>', methods=['GET', 'POST'])
 @login_required
-def profile():
-    return render_template('profile_page.html')
+def profile(user_name):
+    user = User.query.filter_by(user_name=user_name).first()
+    print(user)
+    if user:
+        return render_template('profile_page.html', user_name=user_name, name=user.name, user=current_user)
+    else:
+        return "This user does not exist"
 
 
-
-@app_auth.route('/following', methods=['GET', 'POST'])
+@app_auth.route('/following/<user_name>', methods=['GET', 'POST'])
 @login_required
-def following():
-    return render_template('following_page.html')
+def following(user_name):
+
+    return render_template('following_page.html', user_name=current_user)
 
 
 
@@ -111,3 +125,8 @@ def following():
 def logout():
     logout_user()
     return redirect(url_for('app_auth.login'))
+
+@app_auth.route('/remove-follower/<follower>', methods=['POST'])
+def remove_follower(flwr):
+    flwr = int(flwr)
+    id = Follower.query.get(follower_id=flwr)

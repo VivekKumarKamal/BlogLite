@@ -17,12 +17,84 @@
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
 
+
+
+    <script>
+        function removeFollower(flwrId, user_name){
+
+            fetch('/remove-follower', {
+                method: 'POST',
+                body: JSON.stringify({ flwrId: flwrId })
+                }).then((_res) => {
+                window.location.href ="/followers/" + user_name;
+            });
+            }
+    </script>
+
     <title>{% block title %}Home{% endblock %}</title>
 </head>
 
 
 <body >
-    <h1>Hello Bete Jaldi complete kar project</h1>
+
+
+<!--    header and main feed   -->
+    <header class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbar"
+            >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbar">
+            <div class="navbar-nav">
+                {% if user.is_authenticated %}
+                <a href="/" class="nav-item nav-link navbar-brand me-auto">Blog Lite</a>
+                {% else %}
+                <p class="nav-item navbar-brand me-auto">BLOG Lite</p>
+                {% endif %}
+                {% if user.is_authenticated %}
+                <form class="navbar-nav mx-5">
+                  <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                  <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+                <ul class="navbar-nav ms-5">
+
+                  <li class="nav-item">
+                    <a href="/log-out" class="nav-link" id="logout">Log Out</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/" class="nav-link" id="home">Home</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/profile/{{ user.user_name }}" class="nav-link">Profile</a>
+                  </li>
+
+                  {% else %}
+                  <li class="nav-item">
+                    <a href="/login" class="nav-link" id="login">Log in</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/sign-up" class="nav-link" id="sign-up">Sign up</a>
+                  </li>
+                  {% endif %}
+
+                  <!-- <a href="/sign-up" class="nav-link" id="signup">Sign up</a> -->
+                </ul>
+            </div>
+        </div>
+    </header>
+
+
+
+    <br>
+    <br>
+    <!-- Posts -->
+
+
+
 
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
@@ -57,6 +129,36 @@
         {% endblock %}
     </div>
 
+    <footer>
+        Created with &hearts; by<br>Vivek K. Kamal<br>&copy;Copyright 2022 version 1.35
+    </footer>
 
-</body>
+
+
+    <style>
+        *{
+        background-color: #21383d;
+    }
+
+    .posts {
+        text-align: center;
+      }
+      .post {
+        display:flexbox;
+      }
+
+    img {
+        display: block;
+        margin: 0 auto;
+      }
+
+    footer{
+        text-align: center;
+
+    }
+    .right-align{
+      text-align: right;
+    }
+    </style>
+    </body>
 </html>
