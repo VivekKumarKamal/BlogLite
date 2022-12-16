@@ -20,8 +20,20 @@ def remove_follower():
     flwr_id = flwr['flwrId']
     flwr = Follower.query.get(flwr_id)
     if flwr:
-        print(flwr)
+        # print(flwr)
         if flwr.user_id == current_user.id:
             db.session.delete(flwr)
             db.session.commit()
     return jsonify({})
+
+@app_views.route('/unfollow', methods=['POST'])
+def unfollow():
+    flwg = json.loads(request.data)
+    flwg_id = flwg['flwgId']
+    flwg = Following.query.get(flwg_id)
+    if flwg:
+        if flwg.user_id == current_user.id:
+            db.session.delete(flwg)
+            db.session.commit()
+    return jsonify({})
+

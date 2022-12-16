@@ -2,8 +2,8 @@
 {% block title %}Following{% endblock %}
 {% block content %}
 
-<h3>Here You will see list of the people you follow.</h3>
-<h2>Hello!,{{ user_name.user_name }}</h2>
+<h3>People you follow.</h3>
+<!--<h2>Hello!,{{ user.user_name }}</h2>-->
 
 
 <ul class="list-group list-group-flush" id="notes">
@@ -14,7 +14,7 @@
         {{ flwg.id }} {{ user.query.filter_by(id=flwg.following_id).first().name }}
         {{ user.query.filter_by(id=flwg.following_id).first().user_name }}
 
-        <button type="button" onClick="Unfollow('{{ flwg.id }}', '{{ user.user_name }}')">
+        <button type="button" onClick="unFollow('{{ flwg.id }}', '{{ user.user_name }}')">
             Unfollow
         </button>
     </li>

@@ -30,13 +30,13 @@
             });
             }
 
-        function removeF(flwrId, user_name){
+        function unFollow(flwgId, user_name){
 
-            fetch('/remove-follower', {
+            fetch('/unfollow', {
                 method: 'POST',
-                body: JSON.stringify({ flwrId: flwrId })
+                body: JSON.stringify({ flwgId: flwgId })
                 }).then((_res) => {
-                window.location.href ="/followers/" + user_name;
+                window.location.href ="/following/" + user_name;
             });
             }
 

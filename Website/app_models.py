@@ -22,6 +22,9 @@ class Post(db.Model):
     timestamp = db.Column(db.DateTime(timezone=True), default=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+    likes = db.relationship('Like')
+    comments = db.relationship('Comment')
+
 
 # In python the convention is to name the class in capital letter
 # But in line 10 "user.id"(the green one) is in sql where it is same as U
