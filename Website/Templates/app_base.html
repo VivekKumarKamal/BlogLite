@@ -67,7 +67,7 @@
                 <p class="nav-item navbar-brand me-auto">BLOG Lite</p>
                 {% endif %}
                 {% if user.is_authenticated %}
-                <form class="navbar-nav mx-5">
+                <form class="navbar-nav mx-5" method="POST" action="{{ url_for('app_auth.search') }}">
                   <input class="form-control" type="search" placeholder="Search" aria-label="Search">
                   <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>

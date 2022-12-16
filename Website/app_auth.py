@@ -123,7 +123,6 @@ def logout():
     logout_user()
     return redirect(url_for('app_auth.login'))
 
-@app_auth.route('/remove-follower/<follower>', methods=['POST'])
-def remove_follower(flwr):
-    flwr = int(flwr)
-    id = Follower.query.get(follower_id=flwr)
+@app_auth.route('/search', methods=['POST'])
+def search():
+    return "hehe"

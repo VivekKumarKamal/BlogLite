@@ -23,7 +23,7 @@
 
 
             </div>
-            <div class="ms-3" style="margin-top: 130px;">
+            <div class="ms-3" style="margin-top: 130px; ">
               <h3>{{ name }}</h3>
               <h6>{{ user_name }}</h6>
 
@@ -42,10 +42,15 @@
                 </a>
               </div>
               <div>
+                {% if flwg_count != 0 %}
                 <a href="/following/{{ user_name }}">
                 <p class="mb-1 h5">{{ flwg_count }}</p>
                 <p class="small text-muted mb-0">Following</p>
                 </a>
+                {% else %}
+                <p class="mb-1 h5">{{ flwg_count }}</p>
+                <p class="small text-muted mb-0">Following</p>
+                {% endif %}
               </div>
             </div>
           </div>
