@@ -5,9 +5,24 @@
 <h3>Here You will see list of the people you follow.</h3>
 <h2>Hello!,{{ user_name.user_name }}</h2>
 
-<form action="/delete-follow/{{ user_name.user_name }}" method="get">
-  <button type="submit">Delete</button>
-</form>
+
+<ul class="list-group list-group-flush" id="notes">
+
+    {% for flwg in user.followings %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        {{ user.user_name }}
+        {{ flwg.id }} {{ user.query.filter_by(id=flwg.following_id).first().name }}
+        {{ user.query.filter_by(id=flwg.following_id).first().user_name }}
+
+        <button type="button" onClick="Unfollow('{{ flwg.id }}', '{{ user.user_name }}')">
+            Unfollow
+        </button>
+    </li>
+    {% endfor %}
+
+
+</ul>
+
 
 
 {% endblock %}

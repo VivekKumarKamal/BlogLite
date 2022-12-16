@@ -29,6 +29,17 @@
                 window.location.href ="/followers/" + user_name;
             });
             }
+
+        function removeF(flwrId, user_name){
+
+            fetch('/remove-follower', {
+                method: 'POST',
+                body: JSON.stringify({ flwrId: flwrId })
+                }).then((_res) => {
+                window.location.href ="/followers/" + user_name;
+            });
+            }
+
     </script>
 
     <title>{% block title %}Home{% endblock %}</title>
@@ -129,9 +140,7 @@
         {% endblock %}
     </div>
 
-    <footer>
-        Created with &hearts; by<br>Vivek K. Kamal<br>&copy;Copyright 2022 version 1.35
-    </footer>
+
 
 
 
@@ -154,6 +163,7 @@
 
     footer{
         text-align: center;
+        bottom
 
     }
     .right-align{
@@ -161,4 +171,7 @@
     }
     </style>
     </body>
+    <footer>
+        Created with &hearts; by<br>Vivek K. Kamal<br>&copy;Copyright 2022 version 1.35
+    </footer>
 </html>

@@ -11,6 +11,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(20))
 
     followers = db.relationship('Follower')
+    followings = db.relationship('Following')
 
 
 class Post(db.Model):
@@ -42,8 +43,8 @@ class Comment(db.Model):
 
 class Following(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer)
-    following = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    following_id = db.Column(db.Integer)
 
 
 class Follower(db.Model):

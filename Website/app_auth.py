@@ -98,6 +98,12 @@ def follower(user_name):
 
     return render_template('followers_page.html', user=user)
 
+@app_auth.route('/following/<user_name>', methods=['GET', 'POST'])
+@login_required
+def following(user_name):
+    user = User.query.filter_by(user_name=user_name).first()
+    return render_template('following_page.html', user=user)
+
 
 @app_auth.route('/profile/<user_name>', methods=['GET', 'POST'])
 @login_required
@@ -108,17 +114,6 @@ def profile(user_name):
         return render_template('profile_page.html', user_name=user_name, name=user.name, user=current_user)
     else:
         return "This user does not exist"
-
-
-@app_auth.route('/following/<user_name>', methods=['GET', 'POST'])
-@login_required
-def following(user_name):
-
-    return render_template('following_page.html', user_name=current_user)
-
-
-
-
 
 @app_auth.route('/log-out')
 @login_required
