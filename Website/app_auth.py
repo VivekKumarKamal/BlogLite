@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, request
-from .app_models import User, Post, Like, Comment, Following, Follower, db
+from .app_models import User, Post, Like, Comment, Following, Follower, db, SearchForm
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 from sqlalchemy.orm import Session
@@ -56,10 +56,10 @@ def signup():
             redirect(url_for('app_auth.login'))
 
         elif password != confirm_password:
-            flash("Passwords don't match")
+            flash("Passwords don't match", category='error')
             # print("not matched")
         elif len(password) < 3:
-            flash("Password is too short, should be greater than 7 characters")
+            flash("Password is too short, should be greater than 7 characters", category='error')
 
         else:
             # new_user = User(user_name=user_name, name=name, password=generate_password_hash(password, method='sha256'))
@@ -84,19 +84,7 @@ def signup():
 @app_auth.route('/followers/<user_name>', methods=['GET', 'POST'])
 @login_required
 def follower(user_name):
-    # with Session(engine) as session:
-    #     follower_lis = session.execute(select(Follower.follower_id).where(Follower.user_id == id)).all()
-    #
-    #
-    #     # us = follower.query.filter_by(user_id=1).all()
-    #     print(follower_lis)
     user = User.query.filter_by(user_name=user_name).first()
-
-    # follower_user_names = []
-    # for a in user.followers:
-    #     name = User.query.filter_by(id=a.follower_id).first()
-    #     follower_user_names.append(name)
-
     return render_template('followers_page.html', user=user)
 
 @app_auth.route('/following/<user_name>', methods=['GET', 'POST'])
@@ -113,7 +101,7 @@ def profile(user_name):
     flwr_count = Follower.query.filter_by(user_id=user.id).count()
     flwg_count = Following.query.filter_by(user_id=user.id).count()
     if user:
-        return render_template('profile_page.html', user_name=user_name, name=user.name,flwr_count=flwr_count, flwg_count=flwg_count, user=current_user)
+        return render_template('profile_page.html', form=SearchForm, user_name=user_name, name=user.name,flwr_count=flwr_count, flwg_count=flwg_count, user=current_user)
     else:
         return "This user does not exist"
 
@@ -123,6 +111,26 @@ def logout():
     logout_user()
     return redirect(url_for('app_auth.login'))
 
-@app_auth.route('/search', methods=['POST'])
+@app_auth.route('/search', methods=['GET', 'POST'])
 def search():
-    return "hehe"
+    if request.method == 'GET':
+        return redirect(url_for('app_views.app_feed'))
+    searched = request.form.get('searched')
+
+
+
+    lis = User.query.filter(User.id != current_user.id, User.user_name.like('%' + searched + '%'))
+    found = []
+    for a in lis:
+
+        val = 0
+        for b in current_user.followings:
+            if a.id == b.id:
+                val = 1
+                found.append((a, 1))
+                break
+        if val == 0:
+            found.append((a, 0))
+
+    return render_template('searched_user.html', lis=found, user=current_user, searched=searched)
+

@@ -3,7 +3,7 @@ import json
 from flask import Blueprint, render_template, flash, request, jsonify
 from flask_login import login_required, current_user
 from . import db
-from .app_models import User, Post, Like, Comment, Following, Follower, db
+from .app_models import User, Post, Like, Comment, Following, Follower, db, SearchForm
 
 
 app_views = Blueprint('app_views', __name__)
@@ -37,3 +37,7 @@ def unfollow():
             db.session.commit()
     return jsonify({})
 
+@app_views.context_processor
+def base():
+    form = SearchForm()
+    return dict(form=form)

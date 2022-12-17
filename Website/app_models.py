@@ -1,6 +1,11 @@
 from . import db
 from flask_login import UserMixin
 from sqlalchemy import func, ForeignKey
+from flask_wtf import FlaskForm
+from wtforms.validators import DataRequired
+from wtforms.widgets import TextArea
+from wtforms import StringField, SubmitField, PasswordField
+
 from os import path
 
 
@@ -9,6 +14,7 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String(20))
     user_name = db.Column(db.String(20), unique=True)
     password = db.Column(db.String(20))
+    profile_pic = db.Column(db.LargeBinary)
 
     followers = db.relationship('Follower')
     followings = db.relationship('Following')
@@ -18,7 +24,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(20))
     caption = db.Column(db.String(200))
-    img_url = db.Column(db.String(200))
+    img = db.Column(db.LargeBinary)
     timestamp = db.Column(db.DateTime(timezone=True), default=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
@@ -58,6 +64,10 @@ class Follower(db.Model):
 
 def init_db():
     db.create_all()
+
+class SearchForm(FlaskForm):
+    searched_user = StringField('Searched', validators=[DataRequired()])
+    submit = SubmitField('Submit')
 
 
 if __name__ == '__main__':

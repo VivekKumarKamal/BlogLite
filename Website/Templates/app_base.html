@@ -50,7 +50,7 @@
 
 
 <!--    header and main feed   -->
-    <header class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <header class="navbar navbar-expand-sm navbar-light bg-light">
         <button
             class="navbar-toggler"
             type="button"
@@ -68,7 +68,8 @@
                 {% endif %}
                 {% if user.is_authenticated %}
                 <form class="navbar-nav mx-5" method="POST" action="{{ url_for('app_auth.search') }}">
-                  <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+
+                  <input class="form-control" required name="searched" type="search" placeholder="Search" aria-label="Search">
                   <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
                 <ul class="navbar-nav ms-5">
@@ -146,7 +147,7 @@
 
     <style>
         *{
-        background-color: #21383d;
+<!--        background-color:  #e8f9fd;-->
     }
 
     .posts {
