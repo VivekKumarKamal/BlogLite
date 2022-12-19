@@ -112,17 +112,20 @@ def logout():
     return redirect(url_for('app_auth.login'))
 
 @app_auth.route('/search', methods=['GET', 'POST'])
+@login_required
 def search():
     if request.method == 'GET':
         return redirect(url_for('app_views.app_feed'))
     searched = request.form.get('searched')
+    return redirect(url_for('app_auth.searched', searched=searched))
 
-
+@app_auth.route('/search/results/<searched>')
+@login_required
+def searched(searched):
 
     lis = User.query.filter(User.id != current_user.id, User.user_name.like('%' + searched + '%'))
     found = []
     for a in lis:
-
         val = 0
         for b in current_user.followings:
             if a.id == b.id:

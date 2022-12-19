@@ -37,6 +37,15 @@ def unfollow():
             db.session.commit()
     return jsonify({})
 
+@app_views.route('/follow', methods=['POST'])
+def follow():
+    person = json.loads(request.data)
+    person_id = person['personId']
+    person = Following.query.get(person)
+    
+
+    return jsonify({})
+
 @app_views.context_processor
 def base():
     form = SearchForm()

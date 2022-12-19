@@ -38,7 +38,14 @@
                 }).then((_res) => {
                 window.location.href ="/following/" + user_name;
             });
-            }
+        function follow(personId, user_name){
+
+            fetch('/follow', {
+                method: 'POST',
+                body: JSON.stringify({ personId:personId })
+                }).then((_res) => {
+                window.location.href ="/following/" + user_name;
+            });
 
     </script>
 

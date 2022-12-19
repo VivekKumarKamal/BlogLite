@@ -23,14 +23,18 @@
             <p class="user_name">{{ a.user_name }}</p>
 
         </div>
-
-        <button class="follow_btn">
-            {% if b == 1 %}
+        <form class="follow" method="POST">
+              {% if b == 1 %}
+              <button class="follow_btn" onclick="">
                 Followed
-            {% else %}
-                Follow
-            {% endif %}
-        </button>
+              </button>
+              {% else %}
+              <button class="follow_btn" onclick="">
+                    Follow
+              </button>
+              {% endif %}
+
+        </form>
     </div>
 <style>
 
@@ -61,11 +65,13 @@
 .user_name{
     margin-top: -0.7pc;
 }
-.follow_btn{
+.follow{
     margin-top: auto;
     margin-bottom: auto;
     margin-right: 5px;
     margin-left:15px;
+}
+.follow_btn{
     height: 45px;
     width: 100px;
     background-color: darkcyan;
