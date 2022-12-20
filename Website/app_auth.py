@@ -131,6 +131,7 @@ def searched(searched):
             if a.id == b.id:
                 val = 1
                 found.append((a, 1, b))
+                print(b)
                 break
         if val == 0:
             found.append((a, 0, 0))

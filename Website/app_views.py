@@ -42,9 +42,10 @@ def unfollow():
 def follow():
     person = json.loads(request.data)
     person_id = person['personId']
-    person = Following.query.get(person)
-    
-
+    person = Following.query.get(person_id)
+    if person:
+        db.session.add(person)
+        db.session.commit()
     return jsonify({})
 
 @app_views.context_processor
