@@ -124,15 +124,12 @@ def search():
 def searched(searched):
     lis = User.query.filter(User.id != current_user.id, User.user_name.like('%' + searched + '%'))
     found = []
+
     for a in lis:
-        val = 0
-        for b in current_user.followings:
-            if a.id == b.id:
-                val = 1
-                found.append((a, 1, b))
-                print(b)
-                break
-        if val == 0:
+        temp = Following.query.filter_by(following_id=a.id).first()
+        if temp:
+            found.append((a, 1, temp))
+        else:
             found.append((a, 0, 0))
     return render_template('searched_user.html', lis=found, user=current_user, searched=searched)
 
