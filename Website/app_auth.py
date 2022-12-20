@@ -122,7 +122,6 @@ def search():
 @app_auth.route('/search/results/<searched>', methods=['POST', 'GET'])
 @login_required
 def searched(searched):
-
     lis = User.query.filter(User.id != current_user.id, User.user_name.like('%' + searched + '%'))
     found = []
     for a in lis:
@@ -135,6 +134,5 @@ def searched(searched):
                 break
         if val == 0:
             found.append((a, 0, 0))
-
     return render_template('searched_user.html', lis=found, user=current_user, searched=searched)
 

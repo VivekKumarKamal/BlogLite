@@ -43,10 +43,11 @@ def follow():
     try:
         person = json.loads(request.data)
         person_id = person['personId']
-        person = Following.query.get(person_id)
-        if person:
-            db.session.add(person)
-            db.session.commit()
+
+        new_following = Following(user_id=current_user.id, following_id=person_id)
+        db.session.add(new_following)
+        db.session.commit()
+
         return jsonify({})
     except Exception as e:
         return jsonify({'error': str(e)})
