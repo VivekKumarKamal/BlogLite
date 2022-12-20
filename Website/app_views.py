@@ -40,13 +40,16 @@ def unfollow():
 
 @app_views.route('/follow', methods=['POST'])
 def follow():
-    person = json.loads(request.data)
-    person_id = person['personId']
-    person = Following.query.get(person_id)
-    if person:
-        db.session.add(person)
-        db.session.commit()
-    return jsonify({})
+    try:
+        person = json.loads(request.data)
+        person_id = person['personId']
+        person = Following.query.get(person_id)
+        if person:
+            db.session.add(person)
+            db.session.commit()
+        return jsonify({})
+    except Exception as e:
+        return jsonify({'error': str(e)})
 
 @app_views.context_processor
 def base():
