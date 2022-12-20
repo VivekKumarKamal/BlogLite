@@ -20,7 +20,7 @@
 
 
     <script>
-        function removeFollower(flwrId, user_name){
+        function removeFollowerFromFollowersPage(flwrId, user_name){
 
             fetch('/remove-follower', {
                 method: 'POST',
@@ -30,7 +30,7 @@
             });
             }
 
-        function unFollow(flwgId, user_name){
+        function unFollowFromFollowingPage(flwgId, user_name){
 
             fetch('/unfollow', {
                 method: 'POST',
@@ -38,6 +38,7 @@
                 }).then((_res) => {
                 window.location.href ="/following/" + user_name;
             });
+        }
         function follow(personId, user_name){
 
             fetch('/follow', {
@@ -46,6 +47,17 @@
                 }).then((_res) => {
                 window.location.href ="/following/" + user_name;
             });
+        }
+
+        function unFollowFromSearchedPage(personId, searched){
+
+            fetch('/unfollow', {
+                method: 'POST',
+                body: JSON.stringify({ personId:personId })
+                }).then((_res) => {
+                window.location.href ="/following/" + searched;
+            });
+        }
 
     </script>
 

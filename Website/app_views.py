@@ -19,6 +19,7 @@ def remove_follower():
     flwr = json.loads(request.data)
     flwr_id = flwr['flwrId']
     flwr = Follower.query.get(flwr_id)
+    print("what the fuck")
     if flwr:
         # print(flwr)
         if flwr.user_id == current_user.id:

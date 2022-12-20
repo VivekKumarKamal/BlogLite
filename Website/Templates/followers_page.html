@@ -12,7 +12,7 @@
         {{ flwr.id }} {{ user.query.filter_by(id=flwr.follower_id).first().name }}
         {{ user.query.filter_by(id=flwr.follower_id).first().user_name }}
         {{ user.user_name }}
-        <button type="button" onClick="removeFollower('{{ flwr.id }}', '{{ user.user_name }}')">
+        <button type="button" onClick="removeFollowerFromFollowersPage('{{ flwr.id }}', '{{ user.user_name }}')">
             Remove Follower
         </button>
     </li>

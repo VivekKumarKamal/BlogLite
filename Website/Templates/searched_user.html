@@ -8,7 +8,7 @@
 {% else %}
 <h4>Results....</h4>
 
-{% for a, b in lis %}
+{% for a, b, c in lis %}
 
     <div class="cont">
         <a href="/profile/{{ a.user_name }}">
@@ -25,7 +25,7 @@
         </div>
         <form class="follow" method="POST">
               {% if b == 1 %}
-              <button class="follow_btn" onclick="">
+              <button class="follow_btn" onclick="unFollowFromSearchedPage('{{ c.id }}','{{ searched }}' )">
                 Followed
               </button>
               {% else %}

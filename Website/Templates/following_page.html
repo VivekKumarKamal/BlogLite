@@ -14,7 +14,7 @@
         {{ flwg.id }} {{ user.query.filter_by(id=flwg.following_id).first().name }}
         {{ user.query.filter_by(id=flwg.following_id).first().user_name }}
 
-        <button type="button" onClick="unFollow('{{ flwg.id }}', '{{ user.user_name }}')">
+        <button type="button" onClick="unFollowFromFollowingPage('{{ flwg.id }}', '{{ user.user_name }}')">
             Unfollow
         </button>
     </li>

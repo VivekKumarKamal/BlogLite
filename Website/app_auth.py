@@ -119,7 +119,7 @@ def search():
     searched = request.form.get('searched')
     return redirect(url_for('app_auth.searched', searched=searched))
 
-@app_auth.route('/search/results/<searched>')
+@app_auth.route('/search/results/<searched>', methods=['POST', 'GET'])
 @login_required
 def searched(searched):
 
@@ -130,10 +130,10 @@ def searched(searched):
         for b in current_user.followings:
             if a.id == b.id:
                 val = 1
-                found.append((a, 1))
+                found.append((a, 1, b))
                 break
         if val == 0:
-            found.append((a, 0))
+            found.append((a, 0, 0))
 
     return render_template('searched_user.html', lis=found, user=current_user, searched=searched)
 
