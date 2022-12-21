@@ -94,13 +94,16 @@
                 <ul class="navbar-nav ms-5">
 
                   <li class="nav-item">
-                    <a href="/log-out" class="nav-link" id="logout">Log Out</a>
+                    <a href="/profile/{{ user.user_name }}" class="nav-link">Upload</a>
                   </li>
                   <li class="nav-item">
                     <a href="/" class="nav-link" id="home">Home</a>
                   </li>
                   <li class="nav-item">
                     <a href="/profile/{{ user.user_name }}" class="nav-link">Profile</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/log-out" class="nav-link" id="logout">Log Out</a>
                   </li>
 
                   {% else %}
