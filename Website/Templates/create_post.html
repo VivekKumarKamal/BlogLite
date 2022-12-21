@@ -2,6 +2,15 @@
 {% block title %}Post{% endblock %}
 {% block content %}
 
+<form action="/{{ user_name }}/create-post" method="post" enctype="multipart/form-data">
+  <label for="title">Title:</label><br>
+  <input type="text" id="title" name="title"><br>
+  <label for="caption">Caption:</label><br>
+  <textarea id="caption" name="caption"></textarea><br>
+  <label for="img">Image:</label><br>
+  <input type="file" id="img" name="image" accept="image/*"><br><br>
+  <input type="submit" value="Submit">
+</form>
 
 
 {% endblock %}

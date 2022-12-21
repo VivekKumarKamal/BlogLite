@@ -1,13 +1,15 @@
-from flask import Blueprint, render_template, flash, redirect, url_for, request
+from flask import Blueprint, render_template, flash, redirect, url_for, request, Response
 from .app_models import User, Post, Like, Comment, Following, Follower, db, SearchForm
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from flask_login import login_user, login_required, logout_user, current_user
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, select, exc
 from . import DB_NAME
-import sqlite3
+import imghdr
 
-engine = create_engine(f"sqlite:///./{DB_NAME}")
+
+# engine = create_engine(f"sqlite:///./{DB_NAME}")
 app_auth = Blueprint('app_auth', __name__)
 
 
@@ -122,7 +124,7 @@ def search():
 @app_auth.route('/search/results/<searched>', methods=['POST', 'GET'])
 @login_required
 def searched(searched):
-    lis = User.query.filter(User.id != current_user.id, User.user_name.like('%' + searched + '%'))
+    lis = User.query.filter(User.id != current_user.id, User.user_name.like('%' + searched + '%')).order_by(User.user_name.asc())
     found = []
 
     for a in lis:
@@ -133,3 +135,37 @@ def searched(searched):
             found.append((a, 0, 0))
     return render_template('searched_user.html', lis=found, user=current_user, searched=searched)
 
+
+@app_auth.route('/<user_name>/create-post', methods=['GET', 'POST'])
+@login_required
+def create_post(user_name):
+    # get the file type of the uploaded file
+    if request.method=='POST':
+        file = request.files['image']
+        file_type = imghdr.what(file)
+
+        title = request.form.get('title')
+        caption = request.form.get('caption')
+        user_id = current_user.id
+
+        if file_type in ['jpeg', 'png', 'gif']:
+            # file is an image, process and store it
+            file_name = secure_filename(file.filename)
+            mimetype = file.mimetype
+            new_post = Post(img=file.read(), mimetype=mimetype, title=title, caption=caption, user_id=user_id)
+            db.session.add(new_post)
+            db.session.commit()
+            return 'Post has uploaded'
+
+        else:
+            # file is not an image, reject it
+            return "file type not supported, Upload a Image."
+
+    return render_template('create_post.html',user_name=user_name, user=current_user)
+
+@app_auth.route('/<int:id>')
+def see_post(id):
+    post = Post.query.filter_by(id=id).first()
+    if not post:
+        return "Post not found", 404
+    return Response(post.img, mimetype=post.mimetype)
