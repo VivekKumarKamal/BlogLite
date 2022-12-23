@@ -6,15 +6,133 @@
 
 
 
-    <div class="posts">
-        <div class="post">
-          <img src="https://placekitten.com/g/300/300" alt="A cute kitten">
-          <p>Caption for the cute kitten</p>
+    <div class="cont">
+        <div class="profile_section">
+            <div class="profile">
+                <img class="profile_pic" src="https://placekitten.com/g/300/300" alt="" width="50px" height="50px">
+            </div>
+            <div class="name">
+                Vivek Kumar Kamal
+
+            <div class="user_name">
+                vivek8724
+            </div>
+            </div>
+            <form class="follow" method="POST">
+
+                <button class="follow_btn" onclick="">
+                    <i class="fas fa-plus"></i>
+                    Follow
+                </button>
+          </form>
         </div>
-        <div class="post">
-          <img src="https://placekitten.com/g/300/300" alt="Another cute kitten">
-          <p>Caption for the other cute kitten</p>
+
+        <div class="image_like_cmnt">
+            <div>
+                <div class="title">The Title</div>
+                <img class="image" src="https://placekitten.com/g/300/300" alt="image" width="350px">
+            </div>
+            <div class="like_cmnt">
+                <button class="btn">
+                    <i class="fas fa-heart"></i>
+                </button>
+                <button class="btn">
+                    <i class="fas fa-comment-dots"></i>
+                </button>
+            </div>
+        </div>
+        <div class="capt">
+            Caption
+        </div>
+        <div class="caption">
+            Lorem ipsum dolor sit,
+            amet consectetur adipisicing elit.
+            Repudiandae, saepe dolor. Obcaecati molestias culpa expedita assumenda ab. Perferendis cum numquam omnis officiis delectus molestias recusandae, totam cumque nemo? Deserunt, aliquid.
         </div>
     </div>
 
+<style>
+.cont{
+    background-color: white;
+    height: max-content;
+    width: 350px;
+    display: block;
+    border-radius: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0px 0px 18px black;
+    border: none;
+}
+.profile_section{
+    display: flex;
+    align-items: center;
+    justify-items: center;
+}
+.profile_pic{
+    border-radius: 50%;
+    margin: 5px;
+}
+.follow{
+    position: relative;
+    right: -67px;
+}
+.follow_btn{
+    border-radius: 7px;
+    height: 30px;
+    background: transparent;
+}
+.image_like_cmnt{
+    position: relative;
+    background-color: white;
+    width: max-content;
+    height:fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0px 3px 10px 0.1px, 0px -3px 20px 1px white;
+}
+
+.title{
+    padding: 3px;
+    font-size: larger;
+    text-align: center;
+    overflow: auto;
+    text-shadow: 0px 0px 30px black;
+}
+
+.like_cmnt{
+    background-color: rgb(255, 255, 255);
+    height: 45px;
+    border-radius: 0 0 12px 12px;
+    justify-content:center;
+}
+
+.like{
+    color: aqua;
+    font-size: small;
+}
+.img{
+    padding-left: auto;
+    padding-right: auto;
+}
+.capt{
+    padding: 3px;
+    font-weight: 800;
+}
+.caption{
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    width: 95%;
+}
+.btn{
+    margin-left: 90px;
+    background: transparent;
+    border:none;
+    font-size:x-large;
+}
+.btn:hover{
+    color: rgb(253, 0, 0);
+}
+</style>
 {% endblock %}
