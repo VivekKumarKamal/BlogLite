@@ -40,7 +40,7 @@ class Like(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
     time = db.Column(db.DateTime(timezone=True), default=func.now())
-    liker = db.Column(db.Integer)
+    liker_id = db.Column(db.Integer)
 
 
 class Comment(db.Model):

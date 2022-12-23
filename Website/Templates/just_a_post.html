@@ -1,0 +1,143 @@
+{% extends "app_base.html" %}{% block title %}Search Results{% endblock %}
+{% block content %}
+
+
+
+<div class="just_post_cont">
+        <div class="just_post_profile_section">
+            <div class="profile">
+                <a href="/profile/vivek">
+                    <img class="profile_pic" src="data:image/jpeg;base64, {{ img_data }}" alt="" width="50px" height="50px">
+                </a>
+            </div>
+            <div class="just_post_name">
+                {{ owner.name }}
+
+            <div class="just_post_name user_name">
+                {{ owner.user_name }}
+            </div>
+            </div>
+<!--            <form class="just_post_follow" method="POST">-->
+
+<!--                <button class="just_post_follow_btn" onclick="">-->
+<!--                    <i class="fas fa-plus"></i>-->
+<!--                    Unfollow-->
+<!--                </button>-->
+<!--          </form>-->
+        </div>
+
+        <div class="image_like_cmnt">
+            <div>
+                <div class="title">{{ post.title }}</div>
+                <img class="image" src="data:image/jpeg;base64, {{ img_data }}" alt="image" width="350px">
+            </div>
+            <div class="like_cmnt">
+                <button class="just_post_btn">
+                    <i class="fas fa-heart"></i>
+                    1
+                </button>
+                <button class="just_post_btn">
+                    <i class="fas fa-comment-dots"></i>
+                    6
+                </button>
+            </div>
+        </div>
+        <div class="capt">
+            Caption
+        </div>
+        <div class="caption">
+            {{ post.caption }}
+        </div>
+    </div>
+
+<style>
+.just_post_cont{
+    background-color: white;
+    height: max-content;
+    width: 350px;
+    display: block;
+    border-radius: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0px 0px 18px black;
+    border: none;
+}
+.just_post_profile_section{
+    display: flex;
+    align-items: center;
+    justify-items: center;
+}
+.profile_pic{
+    border-radius: 50%;
+    margin: 5px;
+}
+.just_post_name{
+    margin-left: 5px;
+}
+.just_post_follow{
+    position: relative;
+    right: -67px;
+}
+.just_post_follow_btn{
+    border-radius: 7px;
+    height: 30px;
+    background: transparent;
+}
+.image_like_cmnt{
+    position: relative;
+    background-color: white;
+    width: max-content;
+    height:fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0px 3px 10px 0.1px, 0px -3px 20px 1px white;
+}
+
+.title{
+    padding: 3px;
+    font-size: larger;
+    text-align: center;
+    overflow: auto;
+    text-shadow: 0px 0px 30px black;
+}
+
+.like_cmnt{
+    background-color: rgb(255, 255, 255);
+    height: 45px;
+    border-radius: 0 0 12px 12px;
+    justify-content:center;
+}
+
+.like{
+    color: aqua;
+    font-size: small;
+}
+.img{
+    padding-left: auto;
+    padding-right: auto;
+}
+.capt{
+    padding: 3px;
+    font-weight: 800;
+}
+.caption{
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    width: 95%;
+}
+.just_post_btn{
+    margin-left: 90px;
+    background: transparent;
+    border:none;
+    font-size:x-large;
+}
+.just_post_btn:hover{
+    color: rgb(253, 0, 0);
+}
+</style>
+
+
+
+{% endblock %}

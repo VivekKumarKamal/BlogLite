@@ -7,6 +7,8 @@ from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, select, exc
 from . import DB_NAME
 import imghdr
+import base64
+
 
 
 # engine = create_engine(f"sqlite:///./{DB_NAME}")
@@ -163,9 +165,16 @@ def create_post(user_name):
 
     return render_template('create_post.html',user_name=user_name, user=current_user)
 
-@app_auth.route('/<int:id>')
+@app_auth.route('/post/<int:id>')
+
 def see_post(id):
-    post = Post.query.filter_by(id=id).first()
-    if not post:
+    post_obj = Post.query.filter_by(id=id).first()
+    if not post_obj:
         return "Post not found", 404
-    return Response(post.img, mimetype=post.mimetype)
+
+    image_data = base64.b64encode(post_obj.img).decode('utf-8')
+    post_owner = User.query.filter_by(id=post_obj.user_id).first()
+
+
+
+    return render_template('just_a_post.html', user=current_user, owner=post_owner, img_data=image_data, post=post_obj)
