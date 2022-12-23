@@ -128,7 +128,7 @@ def searched(searched):
     found = []
 
     for a in lis:
-        temp = Following.query.filter_by(following_id=a.id).first()
+        temp = Following.query.filter_by(following_id=a.id, user_id=current_user.id).first()
         if temp:
             found.append((a, 1, temp))
         else:
