@@ -131,10 +131,13 @@ def searched(searched):
 
     for a in lis:
         temp = Following.query.filter_by(following_id=a.id, user_id=current_user.id).first()
+        # temp = current_user.following
         if temp:
             found.append((a, 1, temp))
         else:
             found.append((a, 0, 0))
+    # temp = current_user.following
+
     return render_template('searched_user.html', lis=found, user=current_user, searched=searched)
 
 
@@ -175,6 +178,23 @@ def see_post(id):
     image_data = base64.b64encode(post_obj.img).decode('utf-8')
     post_owner = User.query.filter_by(id=post_obj.user_id).first()
 
+    likes = post_obj.likes
+    comments = post_obj.comments
+    likes_count = len(likes)
+    comments_count = len(comments)
 
 
-    return render_template('just_a_post.html', user=current_user, owner=post_owner, img_data=image_data, post=post_obj)
+    liked = Like.query.filter_by(post_id=post_obj.id, liker_id=current_user.id).first()
+    if liked:
+        liked = 1
+    else:
+        liked = 0
+    return render_template('just_a_post.html',
+                           user=current_user,
+                           owner=post_owner,
+                           lc=likes_count,
+                           cc=comments_count,
+                           img_data=image_data,
+                           post=post_obj,
+                           liked=liked
+                           )

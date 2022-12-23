@@ -32,13 +32,20 @@
                 <img class="image" src="data:image/jpeg;base64, {{ img_data }}" alt="image" width="350px">
             </div>
             <div class="like_cmnt">
+                {% if liked == 1 %}
+                <button class="just_post_btn" style="color:red;">
+                    <i class="fas fa-heart"></i>
+                    {{ lc }}
+                </button>
+                {% else %}
                 <button class="just_post_btn">
                     <i class="fas fa-heart"></i>
-                    1
+                    {{ lc }}
                 </button>
+                {% endif %}
                 <button class="just_post_btn">
                     <i class="fas fa-comment-dots"></i>
-                    6
+                    {{ cc }}
                 </button>
             </div>
         </div>
