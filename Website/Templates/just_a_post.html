@@ -33,15 +33,17 @@
             </div>
             <div class="like_cmnt">
                 {% if lkd == 1 %}
-                <a href="/like-post/{{ post.id }}" class="just_post_btn" style="color:red;">
-                    <i class="fas fa-heart"></i>
-                    {{ lc }}
-                </a>
+
+                    <i class="fas fa-heart" id="like-button-{{ post.id }}" onclick="likePost({{ post.id }})"></i>
+                    <span id="likes-count-{{post.id}}">
+                        {{ post.likes|length }}
+                    </span>
                 {% else %}
-                <a href="/like-post/{{ post.id }}" class="just_post_btn" id="like-button">
-                    <i class="far fa-heart" id="like-count"></i>
-                    {{ lc }}
-                </a>
+
+                    <i class="far fa-heart" id="like-button-{{ post.id }}" onclick="likePost({{ post.id }})"></i>
+                    <span id="likes-count-{{post.id}}">
+                        {{ post.likes|length }}
+                    </span>
                 {% endif %}
                 <button class="just_post_btn">
                     <i class="fas fa-comment-dots"></i>
@@ -140,6 +142,14 @@
     border:none;
     font-size:x-large;
 }
+.fa-heart{
+    margin-left: 90px;
+    background: transparent;
+    border:none;
+    font-size:x-large;
+    cursor: pointer;
+}
+
 .just_post_btn:hover{
     color: rgb(253, 0, 0);
 }

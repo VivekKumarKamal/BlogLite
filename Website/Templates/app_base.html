@@ -199,24 +199,9 @@
     </style>
 
 
-    <script>
-
-        document.getElementById('like-button').addEventListener('click', function() {
-
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/like');
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.unload = function() {
-                if (xhr.status === 200) {
-                    var likeCount = JSON.parse(xhr.responseText);
-                    document.getElementById('like-count').innerHTML = likeCount;
-                }
-                else {
-                    alert('An error occurred');
-                }
-            };
-            xhr.send('item_id=' + itemId);
-        });
+    <script type="text/javascript"
+            src="{{ url_for('static',
+            filename='index.js')}}">
     </script>
 
     </body>

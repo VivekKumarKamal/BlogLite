@@ -171,6 +171,7 @@ def create_post(user_name):
 
 
 @app_auth.route('/post/<int:id>')
+@login_required
 def see_post(id):
     post_obj = Post.query.filter_by(id=id).first()
     if not post_obj:

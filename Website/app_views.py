@@ -57,13 +57,16 @@ def base():
     form = SearchForm()
     return dict(form=form)
 
-@app_views.route('/like-post/<post_id>', methods=['GET'])
+@app_views.route('/like-post-<post_id>', methods=['POST'])
+@login_required
 def like(post_id):
     post = Post.query.filter_by(id=post_id).first()
     liked = Like.query.filter_by(liker_id=current_user.id, post_id=post_id).first()
-
+    print(liked)
+    val = False
     if not post:
         flash("Post not found", category='error')
+        return jsonify({'error': 'Post not found'}, 400)
     elif liked:
         db.session.delete(liked)
         db.session.commit()
@@ -71,5 +74,7 @@ def like(post_id):
         liked = Like(liker_id=current_user.id, post_id=post_id)
         db.session.add(liked)
         db.session.commit()
+        val = True
+    return jsonify({"likes_count": len(post.likes), "liked": val})
 
-    return redirect(url_for('app_auth.see_post', id=post_id))
+
