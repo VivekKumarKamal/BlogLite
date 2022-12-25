@@ -29,8 +29,8 @@ class Post(db.Model):
     timestamp = db.Column(db.DateTime(timezone=True), default=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    likes = db.relationship('Like')
-    comments = db.relationship('Comment')
+    likes = db.relationship('Like', backref='post')
+    comments = db.relationship('Comment', backref='post')
 
 
 # In python the convention is to name the class in capital letter

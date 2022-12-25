@@ -1,6 +1,6 @@
 import json
 
-from flask import Blueprint, render_template, flash, request, jsonify
+from flask import Blueprint, render_template, flash, request, jsonify, redirect, url_for
 from flask_login import login_required, current_user
 from . import db
 from .app_models import User, Post, Like, Comment, Following, Follower, db, SearchForm
@@ -57,12 +57,19 @@ def base():
     form = SearchForm()
     return dict(form=form)
 
-@app_views.route('/like', methods=['POST'])
-def like():
-    item_id = request.form['item_id']  # Retrieve the item ID from the request
+@app_views.route('/like-post/<post_id>', methods=['GET'])
+def like(post_id):
+    post = Post.query.filter_by(id=post_id).first()
+    liked = Like.query.filter_by(liker_id=current_user.id, post_id=post_id).first()
 
-    # Retrieve the updated like count
-    # cursor = db.execute("SELECT likes FROM items WHERE id = ?", (item_id,))
-    like_count = 10
+    if not post:
+        flash("Post not found", category='error')
+    elif liked:
+        db.session.delete(liked)
+        db.session.commit()
+    else:
+        liked = Like(liker_id=current_user.id, post_id=post_id)
+        db.session.add(liked)
+        db.session.commit()
 
-    return jsonify(like_count)
+    return redirect(url_for('app_auth.see_post', id=post_id))

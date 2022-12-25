@@ -33,15 +33,15 @@
             </div>
             <div class="like_cmnt">
                 {% if lkd == 1 %}
-                <button class="just_post_btn" style="color:red;">
+                <a href="/like-post/{{ post.id }}" class="just_post_btn" style="color:red;">
                     <i class="fas fa-heart"></i>
                     {{ lc }}
-                </button>
+                </a>
                 {% else %}
-                <button class="just_post_btn" id="like-button">
-                    <i class="fas fa-heart" id="like-count">8</i>
-
-                </button>
+                <a href="/like-post/{{ post.id }}" class="just_post_btn" id="like-button">
+                    <i class="far fa-heart" id="like-count"></i>
+                    {{ lc }}
+                </a>
                 {% endif %}
                 <button class="just_post_btn">
                     <i class="fas fa-comment-dots"></i>
