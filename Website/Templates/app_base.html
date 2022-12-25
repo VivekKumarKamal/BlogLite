@@ -61,6 +61,10 @@
 
     </script>
 
+
+
+
+
     <title>{% block title %}Home{% endblock %}</title>
 </head>
 
@@ -186,15 +190,37 @@
 
     footer{
         text-align: center;
-        bottom
+        
 
     }
     .right-align{
       text-align: right;
     }
     </style>
+
+
+    <script>
+
+        document.getElementById('like-button').addEventListener('click', function() {
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/like');
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.unload = function() {
+                if (xhr.status === 200) {
+                    var likeCount = JSON.parse(xhr.responseText);
+                    document.getElementById('like-count').innerHTML = likeCount;
+                }
+                else {
+                    alert('An error occurred');
+                }
+            };
+            xhr.send('item_id=' + itemId);
+        });
+    </script>
+
     </body>
     <footer>
-        Created with &hearts; by<br>Vivek K. Kamal<br>&copy;Copyright 2022 version 1.35
+        Created with &hearts; by<br>Vivek K. Kamal<br>&copy;Copyright 2022 version 1.65
     </footer>
 </html>

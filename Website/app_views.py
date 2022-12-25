@@ -56,3 +56,13 @@ def follow():
 def base():
     form = SearchForm()
     return dict(form=form)
+
+@app_views.route('/like', methods=['POST'])
+def like():
+    item_id = request.form['item_id']  # Retrieve the item ID from the request
+
+    # Retrieve the updated like count
+    # cursor = db.execute("SELECT likes FROM items WHERE id = ?", (item_id,))
+    like_count = 10
+
+    return jsonify(like_count)

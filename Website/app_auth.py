@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, flash, redirect, url_for, request, Response
+
+from flask import Blueprint, render_template, flash, redirect, url_for, request, Response, jsonify
 from .app_models import User, Post, Like, Comment, Following, Follower, db, SearchForm
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -10,10 +11,8 @@ import imghdr
 import base64
 
 
-
 # engine = create_engine(f"sqlite:///./{DB_NAME}")
 app_auth = Blueprint('app_auth', __name__)
-
 
 
 @app_auth.route('/login', methods=['GET', 'POST'])
@@ -23,7 +22,6 @@ def login():
         password = request.form.get('password')
 
         user = User.query.filter_by(user_name=user_name).first()
-
 
         if user:
             # if check_password_hash(user.password, password):
@@ -42,10 +40,8 @@ def login():
     return render_template("login.html", user=current_user)
 
 
-
 @app_auth.route('/sign-up', methods=['GET', 'POST'])
 def signup():
-
     if request.method == 'POST':
         user_name = request.form.get('user_name')
         name = request.form.get('name')
@@ -74,7 +70,6 @@ def signup():
             flash('Account Created!', category='success')
             login_user(new_user, remember=True)
 
-
             return redirect(url_for('app_auth.profile', user=current_user, user_name=new_user.user_name))
 
     return render_template('sign_up.html', user=current_user)
@@ -91,6 +86,7 @@ def follower(user_name):
     user = User.query.filter_by(user_name=user_name).first()
     return render_template('followers_page.html', user=user)
 
+
 @app_auth.route('/following/<user_name>', methods=['GET', 'POST'])
 @login_required
 def following(user_name):
@@ -105,15 +101,18 @@ def profile(user_name):
     flwr_count = Follower.query.filter_by(user_id=user.id).count()
     flwg_count = Following.query.filter_by(user_id=user.id).count()
     if user:
-        return render_template('profile_page.html', form=SearchForm, user_name=user_name, name=user.name,flwr_count=flwr_count, flwg_count=flwg_count, user=current_user)
+        return render_template('profile_page.html', form=SearchForm, user_name=user_name, name=user.name,
+                               flwr_count=flwr_count, flwg_count=flwg_count, user=current_user)
     else:
         return "This user does not exist"
+
 
 @app_auth.route('/log-out')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('app_auth.login'))
+
 
 @app_auth.route('/search', methods=['GET', 'POST'])
 @login_required
@@ -123,10 +122,12 @@ def search():
     searched = request.form.get('searched')
     return redirect(url_for('app_auth.searched', searched=searched))
 
+
 @app_auth.route('/search/results/<searched>', methods=['POST', 'GET'])
 @login_required
 def searched(searched):
-    lis = User.query.filter(User.id != current_user.id, User.user_name.like('%' + searched + '%')).order_by(User.user_name.asc())
+    lis = User.query.filter(User.id != current_user.id, User.user_name.like('%' + searched + '%')).order_by(
+        User.user_name.asc())
     found = []
 
     for a in lis:
@@ -145,7 +146,7 @@ def searched(searched):
 @login_required
 def create_post(user_name):
     # get the file type of the uploaded file
-    if request.method=='POST':
+    if request.method == 'POST':
         file = request.files['image']
         file_type = imghdr.what(file)
 
@@ -166,10 +167,10 @@ def create_post(user_name):
             # file is not an image, reject it
             return "file type not supported, Upload a Image."
 
-    return render_template('create_post.html',user_name=user_name, user=current_user)
+    return render_template('create_post.html', user_name=user_name, user=current_user)
+
 
 @app_auth.route('/post/<int:id>')
-
 def see_post(id):
     post_obj = Post.query.filter_by(id=id).first()
     if not post_obj:
@@ -179,16 +180,16 @@ def see_post(id):
     post_owner = User.query.filter_by(id=post_obj.user_id).first()
 
     likes = post_obj.likes
+    # print(likes)
     comments = post_obj.comments
     likes_count = len(likes)
     comments_count = len(comments)
 
-
     liked = Like.query.filter_by(post_id=post_obj.id, liker_id=current_user.id).first()
+    # print(liked)
+    lkd = 0
     if liked:
-        liked = 1
-    else:
-        liked = 0
+        lkd = 1
     return render_template('just_a_post.html',
                            user=current_user,
                            owner=post_owner,
@@ -196,5 +197,10 @@ def see_post(id):
                            cc=comments_count,
                            img_data=image_data,
                            post=post_obj,
-                           liked=liked
+                           lkd=lkd
                            )
+
+
+# Flask route
+
+
