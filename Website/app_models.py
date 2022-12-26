@@ -38,16 +38,17 @@ class Post(db.Model):
 
 class Like(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete="CASCADE"))
     time = db.Column(db.DateTime(timezone=True), default=func.now())
-    liker_id = db.Column(db.Integer, nullable=False)
+    liker_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete="CASCADE"), nullable=False)
 
+# ondelete cascade: Delete it when parent is deleted
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete="CASCADE"), nullable=False)
     time = db.Column(db.DateTime(timezone=True), default=func.now())
-    commenter = db.Column(db.Integer)
+    commenter = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
     comment = db.Column(db.String(150), nullable=False)
 
 
