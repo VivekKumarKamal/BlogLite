@@ -4,14 +4,23 @@ from flask import Blueprint, render_template, flash, request, jsonify, redirect,
 from flask_login import login_required, current_user
 from . import db
 from .app_models import User, Post, Like, Comment, Following, Follower, db, SearchForm
-
+import base64
 
 app_views = Blueprint('app_views', __name__)
 
 @app_views.route('/', methods=['GET', 'POST'])
 @login_required
 def app_feed():
-    return render_template('feed.html', user=current_user)
+    posts = []
+    post_objects = Post.query.order_by(Post.timestamp.desc())
+
+    for obj in post_objects:
+        image_data = base64.b64encode(obj.img).decode('utf-8')
+        tup = (obj, image_data)
+        posts.append(tup)
+
+    return render_template('feed.html', user=current_user, User=User, Like=Like, posts=posts)
+
 
 
 @app_views.route('/remove-follower', methods=['POST'])
@@ -19,7 +28,6 @@ def remove_follower():
     flwr = json.loads(request.data)
     flwr_id = flwr['flwrId']
     flwr = Follower.query.get(flwr_id)
-    print("what the fuck")
     if flwr:
         # print(flwr)
         if flwr.user_id == current_user.id:

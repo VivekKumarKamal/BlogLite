@@ -155,8 +155,6 @@ def create_post(user_name):
         user_id = current_user.id
 
         if file_type in ['jpeg', 'png', 'gif']:
-            # file is an image, process and store it
-            file_name = secure_filename(file.filename)
             mimetype = file.mimetype
             new_post = Post(img=file.read(), mimetype=mimetype, title=title, caption=caption, user_id=user_id)
             db.session.add(new_post)
@@ -164,7 +162,6 @@ def create_post(user_name):
             return 'Post has uploaded'
 
         else:
-            # file is not an image, reject it
             return "file type not supported, Upload a Image."
 
     return render_template('create_post.html', user_name=user_name, user=current_user)

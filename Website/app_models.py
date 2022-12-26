@@ -19,6 +19,13 @@ class User(db.Model, UserMixin):
     followers = db.relationship('Follower')
     followings = db.relationship('Following')
 
+    likes = db.relationship('Like', backref='user', passive_deletes=True)
+    comments = db.relationship('Comment', backref='user', passive_deletes=True)
+
+# backref: it references back means from likes we can access the user who liked,
+# if not put only can access likes form the user
+
+# passive_deletes: delete all the likes/comments when user is deleted,,,,,,works with the cascade thing below
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -27,10 +34,10 @@ class Post(db.Model):
     img = db.Column(db.Text, unique=True)
     mimetype = db.Column(db.Text)
     timestamp = db.Column(db.DateTime(timezone=True), default=func.now())
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"))
 
-    likes = db.relationship('Like', backref='post')
-    comments = db.relationship('Comment', backref='post')
+    likes = db.relationship('Like', backref='post', passive_deletes=True)
+    comments = db.relationship('Comment', backref='post', passive_deletes=True)
 
 
 # In python the convention is to name the class in capital letter
@@ -40,7 +47,7 @@ class Like(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete="CASCADE"))
     time = db.Column(db.DateTime(timezone=True), default=func.now())
-    liker_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete="CASCADE"), nullable=False)
+    liker_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
 
 # ondelete cascade: Delete it when parent is deleted
 

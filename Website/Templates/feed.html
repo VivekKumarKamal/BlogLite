@@ -4,42 +4,48 @@
 
 <h3>Here You will see all the post of people you follow.  {{ user.user_name }}</h3>
 
+{% for post_obj, image_data in posts %}
 
 
-    <div class="feed_cont">
-        <div class="feed_profile_section">
+<div class="just_post_cont">
+        <div class="just_post_profile_section">
             <div class="profile">
                 <a href="/profile/vivek">
-                    <img class="profile_pic" src="https://placekitten.com/g/300/300" alt="" width="50px" height="50px">
+                    <img class="profile_pic" src="data:image/jpeg;base64, {{ image_data }}" alt="" width="50px" height="50px">
                 </a>
             </div>
-            <div class="feed_name">
-                Vivek Kumar Kamal
+            <div class="just_post_name">
+                {{ User.query.filter_by(id=post_obj.user_id).first().name }}
 
-            <div class="feed_user_name">
-                vivek8724
+            <div class="just_post_name user_name">
+                {{ User.query.filter_by(id=post_obj.user_id).first().user_name }}
             </div>
             </div>
-<!--            <form class="feed_follow" method="POST">-->
-
-<!--                <button class="feed_follow_btn" onclick="">-->
-<!--                    <i class="fas fa-plus"></i>-->
-<!--                    Unfollow-->
-<!--                </button>-->
-<!--          </form>-->
         </div>
+
 
         <div class="image_like_cmnt">
             <div>
-                <div class="title">The Title</div>
-                <img class="image" src="https://placekitten.com/g/300/300" alt="image" width="350px">
+                <div class="title">{{ post_obj.title }}</div>
+                <img class="image" src="data:image/jpeg;base64, {{ image_data }}" alt="image" width="350px">
             </div>
             <div class="like_cmnt">
-                <button class="feed_btn">
-                    <i class="fas fa-heart"></i>
-                </button>
-                <button class="feed_btn">
-                    <i class="fas fa-comment-dots"></i>
+                {% if  Like.query.filter_by(post_id=post_obj.id, liker_id=current_user.id).first() %}
+
+                    <i class="fas fa-heart" id="like-button-{{ post_obj.id }}" onclick="likePost({{ post_obj.id }})"></i>
+                    <span id="likes-count-{{post_obj.id}}">
+                        {{ post_obj.likes|length }}
+                    </span>
+                {% else %}
+
+                    <i class="far fa-heart" id="like-button-{{ post_obj.id }}" onclick="likePost({{ post_obj.id }})"></i>
+                    <span id="likes-count-{{post_obj.id}}">
+                        {{ post_obj.likes|length }}
+                    </span>
+                {% endif %}
+                <button class="just_post_btn">
+                    <i class="far fa-comment-dots"></i>
+                    {{ post_obj.comments|length }}
                 </button>
             </div>
         </div>
@@ -47,14 +53,12 @@
             Caption
         </div>
         <div class="caption">
-            Lorem ipsum dolor sit,
-            amet consectetur adipisicing elit.
-            Repudiandae, saepe dolor. Obcaecati molestias culpa expedita assumenda ab. Perferendis cum numquam omnis officiis delectus molestias recusandae, totam cumque nemo? Deserunt, aliquid.
+            {{ post_obj.caption }}
         </div>
     </div>
 
 <style>
-.feed_cont{
+.just_post_cont{
     background-color: white;
     height: max-content;
     width: 350px;
@@ -64,8 +68,10 @@
     margin-right: auto;
     box-shadow: 0px 0px 18px black;
     border: none;
+    margin-top:30px;
+    margin-bottom:40px;
 }
-.feed_profile_section{
+.just_post_profile_section{
     display: flex;
     align-items: center;
     justify-items: center;
@@ -74,11 +80,14 @@
     border-radius: 50%;
     margin: 5px;
 }
-.feed_follow{
+.just_post_name{
+    margin-left: 5px;
+}
+.just_post_follow{
     position: relative;
     right: -67px;
 }
-.feed_follow_btn{
+.just_post_follow_btn{
     border-radius: 7px;
     height: 30px;
     background: transparent;
@@ -127,14 +136,28 @@
     position: relative;
     width: 95%;
 }
-.feed_btn{
+.just_post_btn{
     margin-left: 90px;
     background: transparent;
     border:none;
     font-size:x-large;
 }
-.feed_btn:hover{
+.fas{
+ color: red;
+}
+.fa-heart{
+    margin-left: 90px;
+    background: transparent;
+    border:none;
+    font-size:x-large;
+    cursor: pointer;
+}
+.just_post_btn:hover{
     color: rgb(253, 0, 0);
 }
 </style>
+
+
+
+{% endfor %}
 {% endblock %}
