@@ -19,3 +19,13 @@ function likePost(postId){
     });
     ;
 }
+
+function deletePost(postId){
+    if (confirm("Are you sure you want to delete this data?")){
+        fetch(`/delete-post-${postId}`,
+        {method: "POST"})
+        .then((_res) =>{
+                window.location.href ="/";
+        });
+    }
+}

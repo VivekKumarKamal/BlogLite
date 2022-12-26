@@ -6,7 +6,7 @@
 <div class="just_post_cont">
         <div class="just_post_profile_section">
             <div class="profile">
-                <a href="/profile/vivek">
+                <a href="/profile/{{ owner.user_name }}">
                     <img class="profile_pic" src="data:image/jpeg;base64, {{ img_data }}" alt="" width="50px" height="50px">
                 </a>
             </div>
@@ -17,6 +17,26 @@
                 {{ owner.user_name }}
             </div>
             </div>
+            {% if user.id == post.user_id %}
+                {% if post.hide != 1 %}
+                    <div class="hide_post more_btn">
+                        <a href="/hide-post/{{ post.id }}">
+                            hide
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="hide_post more_btn">
+                        <a href="/hide-post/{{ post.id }}">
+                            hidden
+                        </a>
+                    </div>
+                {% endif %}
+            <div class="delete_post">
+                <button type="button" onclick="deletePost({{ post.id }})">
+                    Delete
+                </button>
+            </div>
+            {% endif %}
 <!--            <form class="just_post_follow" method="POST">-->
 
 <!--                <button class="just_post_follow_btn" onclick="">-->

@@ -159,7 +159,7 @@ def create_post(user_name):
             new_post = Post(img=file.read(), mimetype=mimetype, title=title, caption=caption, user_id=user_id)
             db.session.add(new_post)
             db.session.commit()
-            return 'Post has uploaded'
+            return redirect("app_views.app_feed")
 
         else:
             return "file type not supported, Upload a Image."

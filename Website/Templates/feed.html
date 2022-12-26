@@ -2,7 +2,7 @@
 {% block title %}Feed{% endblock %}
 {% block content %}
 
-<h3>Here You will see all the post of people you follow.  {{ user.user_name }}</h3>
+
 
 {% for post_obj, image_data in posts %}
 
@@ -10,7 +10,7 @@
 <div class="just_post_cont">
         <div class="just_post_profile_section">
             <div class="profile">
-                <a href="/profile/vivek">
+                <a href="/profile/{{ User.query.filter_by(id=post_obj.user_id).first().user_name }}">
                     <img class="profile_pic" src="data:image/jpeg;base64, {{ image_data }}" alt="" width="50px" height="50px">
                 </a>
             </div>
@@ -20,7 +20,36 @@
             <div class="just_post_name user_name">
                 {{ User.query.filter_by(id=post_obj.user_id).first().user_name }}
             </div>
+
             </div>
+            {% if user.id == post_obj.user_id %}
+            <div class="hide_post more_btn">
+<!--                <button type="button" class="btn btn-sm btn-primary dropdown-toggle more_btn"-->
+<!--                        data-bs-toggle="dropdown">-->
+<!--                </button>-->
+                <a href="/hide-post/{{ post_obj.id }}">
+                    hide
+                </a>
+            </div>
+            <div class="delete_post">
+<!--                <button type="button" class="btn btn-sm btn-primary dropdown-toggle more_btn"-->
+<!--                        data-bs-toggle="dropdown">-->
+<!--                </button>-->
+                <button type="button" onclick="deletePost({{ post_obj.id }})">
+                    Delete
+                </button>
+            </div>
+            {% endif %}
+
+<!--                <ul class="dropdown-menu">-->
+<!--                    <li>-->
+<!--                        <a href="/delete-post/{{ post_obj.id }}" class="dropdown-item">Delete</a>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <a href="/delete-post/{{ post_obj.id }}" class="dropdown-item">Delete</a>-->
+<!--                    </li>-->
+<!--                </ul>-->
+
         </div>
 
 
@@ -81,11 +110,13 @@
     margin: 5px;
 }
 .just_post_name{
-    margin-left: 5px;
+    margin-left: 7px;
 }
-.just_post_follow{
-    position: relative;
-    right: -67px;
+
+
+.more_btn{
+    position: absolute;
+    right: 300px;
 }
 .just_post_follow_btn{
     border-radius: 7px;

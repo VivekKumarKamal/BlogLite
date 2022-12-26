@@ -12,7 +12,7 @@ from os import path
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20))
-    user_name = db.Column(db.String(20), unique=True)
+    user_name = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(20))
     profile_pic = db.Column(db.LargeBinary)
 
@@ -35,6 +35,7 @@ class Post(db.Model):
     mimetype = db.Column(db.Text)
     timestamp = db.Column(db.DateTime(timezone=True), default=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"))
+    hide = db.Column(db.Integer, default=0)
 
     likes = db.relationship('Like', backref='post', passive_deletes=True)
     comments = db.relationship('Comment', backref='post', passive_deletes=True)

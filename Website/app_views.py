@@ -12,7 +12,7 @@ app_views = Blueprint('app_views', __name__)
 @login_required
 def app_feed():
     posts = []
-    post_objects = Post.query.order_by(Post.timestamp.desc())
+    post_objects = Post.query.filter_by(hide=0).order_by(Post.timestamp.desc())
 
     for obj in post_objects:
         image_data = base64.b64encode(obj.img).decode('utf-8')
@@ -85,4 +85,23 @@ def like(post_id):
         val = True
     return jsonify({"likes_count": len(post.likes), "liked": val})
 
+@app_views.route("/hide-post/<post_id>")
+@login_required
+def hide_post(post_id):
+    post = Post.query.filter_by(id=post_id).first()
+    if post.hide == 0:
+        post.hide = 1
+    else:
+        post.hide = 0
+    db.session.commit()
 
+    return redirect(url_for('app_views.app_feed'))
+
+@app_views.route("/delete-post-<post_id>", methods=["POST"])
+@login_required
+def delete_post(post_id):
+    post = Post.query.filter_by(id=post_id).first()
+    db.session.delete(post)
+    db.session.commit()
+
+    return redirect(url_for('app_views.app_feed'))
