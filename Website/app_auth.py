@@ -21,7 +21,10 @@ def login():
         user_name = request.form.get('user_name')
         password = request.form.get('password')
 
+        # print(user_name)
+
         user = User.query.filter_by(user_name=user_name).first()
+        # print(user)
 
         if user:
             # if check_password_hash(user.password, password):
@@ -172,8 +175,12 @@ def create_post(user_name):
 def see_post(id):
     post_obj = Post.query.filter_by(id=id).first()
     if not post_obj:
-        return "Post not found", 404
+        return "<h2>Post not found</h2>", 404
 
+    # error code 404 = bad request
+
+    if post_obj.hide == 1 and current_user.id != post_obj.user_id:
+        return "<h2>This post is hidden and only visible to the owner.</h2>", 400
     image_data = base64.b64encode(post_obj.img).decode('utf-8')
     post_owner = User.query.filter_by(id=post_obj.user_id).first()
 
