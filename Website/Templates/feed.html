@@ -23,25 +23,42 @@
 
             </div>
             <div class="dropdown">
-                <button id="{{ post_obj.id }}" class="click">&#8942;</button>
-                <div class="list">
-
-                    <button class="links">Share</button>
-
+                  <button class="btn primary dropdown-toggle"
+                          type="button" id="dropdownMenuButton"
+                          data-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false">
+                      More
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#">Action</a>
                     {% if user.id == post_obj.user_id %}
-                        <a href="/hide-post/{{ post_obj.id }}" class="links">Hide</a>
-                        <button type="button" onClick="deletePost({{ post_obj.id }})" class="links">Delete</button>
-                        <button class="links">Edit</button>
+                    <a class="dropdown-item" onClick="deletePost({{ post_obj.id }})">Delete</a>
+                    <a class="dropdown-item" onclick="hidePost({{ post_obj.id }})">Hide</a>
                     {% endif %}
-                </div>
+                  </div>
             </div>
-            <script>
-                let click{{ post_obj.id }} = document.querySelector('.click');
-                        let list = document.querySelector('.list');
-                        click{{ post_obj.id }}.addEventListener("click", ()=>{
-                            list.classList.toggle('newlist');
-                        });
-            </script>
+
+<!--            <div class="dropdown">-->
+<!--                <button id="{{ post_obj.id }}" class="click">&#8942;</button>-->
+<!--                <div class="list">-->
+
+<!--                    <button class="links">Share</button>-->
+
+<!--                    {% if user.id == post_obj.user_id %}-->
+<!--                        <a href="/hide-post/{{ post_obj.id }}" class="links">Hide</a>-->
+<!--                        <button type="button" onClick="deletePost({{ post_obj.id }})" class="links">Delete</button>-->
+<!--                        <button class="links">Edit</button>-->
+<!--                    {% endif %}-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <script>-->
+<!--                let click{{ post_obj.id }} = document.querySelector('.click');-->
+<!--                        let list = document.querySelector('.list');-->
+<!--                        click{{ post_obj.id }}.addEventListener("click", ()=>{-->
+<!--                            list.classList.toggle('newlist');-->
+<!--                        });-->
+<!--            </script>-->
         </div>
 
 
@@ -105,11 +122,11 @@
     margin-left: 7px;
 }
 
-
-.more_btn{
-    position: absolute;
-    right: 300px;
+.dropdown-toggle{
+    position:relative;
+    right:-120px;
 }
+
 .just_post_follow_btn{
     border-radius: 7px;
     height: 30px;

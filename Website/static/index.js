@@ -21,9 +21,18 @@ function likePost(postId){
 }
 
 function deletePost(postId){
-    if (confirm("Are you sure you want to delete this data?")){
+    if (confirm("Are you sure you want to delete this Post")){
         fetch(`/delete-post-${postId}`,
         {method: "POST"})
+        .then((_res) =>{
+                window.location.href ="/";
+        });
+    }
+}
+
+function hidePost(postId){
+    if (confirm("Are you sure you want to hide this Post")){
+        fetch(`/hide-post-${postId}`)
         .then((_res) =>{
                 window.location.href ="/";
         });

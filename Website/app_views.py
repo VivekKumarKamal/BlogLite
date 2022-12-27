@@ -85,10 +85,13 @@ def like(post_id):
         val = True
     return jsonify({"likes_count": len(post.likes), "liked": val})
 
-@app_views.route("/hide-post/<post_id>")
+@app_views.route("/hide-post-<post_id>")
 @login_required
 def hide_post(post_id):
+
     post = Post.query.filter_by(id=post_id).first()
+    if current_user.id != post.user_id:
+        return "Any one other than Author cannot hide the post.", 404
     if post.hide == 0:
         post.hide = 1
     else:
