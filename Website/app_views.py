@@ -97,14 +97,19 @@ def hide_post(post_id):
     else:
         post.hide = 0
     db.session.commit()
-
+    flash('Post hidden Successfully', category='success')
     return redirect(url_for('app_views.app_feed'))
 
 @app_views.route("/delete-post-<post_id>", methods=["POST"])
 @login_required
 def delete_post(post_id):
+
     post = Post.query.filter_by(id=post_id).first()
-    db.session.delete(post)
-    db.session.commit()
+    if current_user.id != post.user_id:
+        flash('Any one other than Author cannot hide the post.', category='error')
+    else:
+        db.session.delete(post)
+        db.session.commit()
+        flash('Post Deleted Successfully', category='success')
 
     return redirect(url_for('app_views.app_feed'))
