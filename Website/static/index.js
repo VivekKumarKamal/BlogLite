@@ -46,5 +46,5 @@ function copyToClipboard(postId){
 
     navigator.clipboard.writeText(link);
 
-    alert("copied text: " + link)
+    alert("URL of the post copied to the clipboard:  " + link)
 }
