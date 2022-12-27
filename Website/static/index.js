@@ -38,3 +38,13 @@ function hidePost(postId){
         });
     }
 }
+
+
+function copyToClipboard(postId){
+    var link = `${window.location.href}post/${ postId }`;
+    // window.location.href gives the url of website
+
+    navigator.clipboard.writeText(link);
+
+    alert("copied text: " + link)
+}

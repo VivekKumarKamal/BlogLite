@@ -31,7 +31,7 @@
                       More
                   </button>
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="#">Share</a>
+                    <a class="dropdown-item" onclick="copyToClipboard({{ post_obj.id }})">Share</a>
                     {% if user.id == post_obj.user_id %}
                     <a class="dropdown-item" onClick="deletePost({{ post_obj.id }})">Delete</a>
                     <a class="dropdown-item" onclick="hidePost({{ post_obj.id }})">Hide</a>
