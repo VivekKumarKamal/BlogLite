@@ -22,34 +22,26 @@
             </div>
 
             </div>
-            {% if user.id == post_obj.user_id %}
-            <div class="hide_post more_btn">
-<!--                <button type="button" class="btn btn-sm btn-primary dropdown-toggle more_btn"-->
-<!--                        data-bs-toggle="dropdown">-->
-<!--                </button>-->
-                <a href="/hide-post/{{ post_obj.id }}">
-                    hide
-                </a>
-            </div>
-            <div class="delete_post">
-<!--                <button type="button" class="btn btn-sm btn-primary dropdown-toggle more_btn"-->
-<!--                        data-bs-toggle="dropdown">-->
-<!--                </button>-->
-                <button type="button" onclick="deletePost({{ post_obj.id }})">
-                    Delete
-                </button>
-            </div>
-            {% endif %}
+            <div class="dropdown">
+                <button id="{{ post_obj.id }}" class="click">&#8942;</button>
+                <div class="list">
 
-<!--                <ul class="dropdown-menu">-->
-<!--                    <li>-->
-<!--                        <a href="/delete-post/{{ post_obj.id }}" class="dropdown-item">Delete</a>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <a href="/delete-post/{{ post_obj.id }}" class="dropdown-item">Delete</a>-->
-<!--                    </li>-->
-<!--                </ul>-->
+                    <button class="links">Share</button>
 
+                    {% if user.id == post_obj.user_id %}
+                        <a href="/hide-post/{{ post_obj.id }}" class="links">Hide</a>
+                        <button type="button" onClick="deletePost({{ post_obj.id }})" class="links">Delete</button>
+                        <button class="links">Edit</button>
+                    {% endif %}
+                </div>
+            </div>
+            <script>
+                let click{{ post_obj.id }} = document.querySelector('.click');
+                        let list = document.querySelector('.list');
+                        click{{ post_obj.id }}.addEventListener("click", ()=>{
+                            list.classList.toggle('newlist');
+                        });
+            </script>
         </div>
 
 
@@ -186,6 +178,59 @@
 .just_post_btn:hover{
     color: rgb(253, 0, 0);
 }
+
+.dropdown{
+    width: 200px;
+    position: relative;
+}
+.click{
+    background: none;
+    padding: 12px;
+    font-size: 1.2em;
+    font-family: Futura Md BT;
+    border: none;
+    outline: none;
+    width: 20px;
+    color: rgb(0, 0, 0);
+    transition: 0.3s;
+    position: relative;
+    right: -130px;
+}
+.click:hover{
+    background-color: rgb(109, 109, 109);
+}
+.links{
+    padding: 10px;
+    font-size: 1.2em;
+    font-family: Futura Md BT;
+    border: none;
+    border-radius: 2px;
+    outline: none;
+    width: 100px;
+    color: rgb(0, 0, 0);
+    transition: 0.3s;
+    background-color: rgb(255, 255, 255);
+}
+.list{
+    position: absolute;
+    right: 0px;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: 0.31s;
+    border-radius: 20px;
+    z-index: 100;
+}
+.newlist{
+    transform: scaleY(1);
+
+}
+
+.links:hover{
+    background-color: rgb(192, 192, 192);
+    transform: scale(1.1);
+}
+
+
 </style>
 
 
