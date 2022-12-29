@@ -33,7 +33,7 @@ class Post(db.Model):
     caption = db.Column(db.String(200))
     img = db.Column(db.Text, unique=True)
     mimetype = db.Column(db.Text)
-    timestamp = db.Column(db.DateTime(timezone=True), default=func.now(), nullable=False)
+    timestamp = db.Column(db.DateTime(timezone=True), default=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
     hide = db.Column(db.Integer, default=0)
 
