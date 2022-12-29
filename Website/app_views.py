@@ -103,10 +103,18 @@ def delete_post(post_id):
 
     post = Post.query.filter_by(id=post_id).first()
     if current_user.id != post.user_id:
-        flash('Any one other than Author cannot hide the post.', category='error')
+        flash('Any one other than Author cannot delete the post.', category='error')
     else:
+        for like in post.likes:
+            db.session.delete(like)
+            db.session.commit()
+        for comment in post.comments:
+            db.session.delete(comment)
+            db.session.commit()
+
         db.session.delete(post)
         db.session.commit()
         flash('Post Deleted Successfully', category='success')
+
 
     return redirect(url_for('app_views.app_feed'))

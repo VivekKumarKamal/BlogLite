@@ -29,7 +29,7 @@ class User(db.Model, UserMixin):
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(20))
+    title = db.Column(db.String(20), nullable=False)
     caption = db.Column(db.String(200))
     img = db.Column(db.Text, unique=True)
     mimetype = db.Column(db.Text)
