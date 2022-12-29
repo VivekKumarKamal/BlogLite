@@ -206,5 +206,16 @@ def see_post(id):
                            )
 
 
-
-
+@app_auth.route("/delete-comment/<int:comment_id>")
+@login_required
+def delete_comment(comment_id):
+    cmnt = Comment.query.filter_by(id=comment_id).first()
+    if cmnt:
+        if cmnt.commenter != current_user.id and cmnt.post.user_id != current_user.id:
+            flash("Sorry! You are neither the commenter nor the owner of post, so you can't delete the comment.", category='error')
+        else:
+            db.session.delete(cmnt)
+            db.session.commit()
+    else:
+        flash("Comment does not exist.", category='error')
+    return redirect(url_for('app_views.app_feed'))

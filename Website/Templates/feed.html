@@ -31,11 +31,11 @@
                       More
                   </button>
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" onclick="copyToClipboard({{ post_obj.id }})">Share</a>
+                    <a class="dropdown-item" type="button" onclick="copyToClipboard({{ post_obj.id }})">Share</a>
                     {% if user.id == post_obj.user_id %}
-                    <a class="dropdown-item" onClick="deletePost({{ post_obj.id }})">Delete</a>
-                    <a class="dropdown-item" onclick="hidePost({{ post_obj.id }})">Hide</a>
-                    <a class="dropdown-item" href="/edit-post-{{ post_obj.id }}">Edit</a>
+                    <a class="dropdown-item" type="button" onClick="deletePost({{ post_obj.id }})">Delete</a>
+                    <a class="dropdown-item" type="button" onclick="hidePost({{ post_obj.id }})">Hide</a>
+                    <a class="dropdown-item" type="button" href="/edit-post-{{ post_obj.id }}">Edit</a>
                     {% endif %}
                   </div>
             </div>
@@ -125,6 +125,17 @@
                                         </div>
                                         <div class="overflow-auto">
                                             {{ text.comment }}
+                                        </div>
+
+                                        <div class="btn-group">
+                                            <button type="button"
+                                                    class="btn btn-sm btn-primary dropdown-toggle"
+                                                    data-toggle="dropdown"></button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a href="/delete-comment/{{ text.id }}">Delete</a>
+                                                </li>
+                                            </ul>
                                         </div>
                                     </div>
                                     <hr>
@@ -296,8 +307,8 @@
 
 }
 
-.links:hover{
-    background-color: rgb(192, 192, 192);
+.dropdown-item:hover{
+<!--    background-color: rgb(192, 192, 192);-->
     transform: scale(1.1);
 }
 
