@@ -33,8 +33,8 @@ class Post(db.Model):
     caption = db.Column(db.String(200))
     img = db.Column(db.Text, unique=True)
     mimetype = db.Column(db.Text)
-    timestamp = db.Column(db.DateTime(timezone=True), default=func.now())
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"))
+    timestamp = db.Column(db.DateTime(timezone=True), default=func.now(), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
     hide = db.Column(db.Integer, default=0)
 
     likes = db.relationship('Like', backref='post', passive_deletes=True)
@@ -46,7 +46,7 @@ class Post(db.Model):
 
 class Like(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete="CASCADE"))
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete="CASCADE"), nullable=False)
     time = db.Column(db.DateTime(timezone=True), default=func.now())
     liker_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
 

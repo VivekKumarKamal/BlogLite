@@ -1,6 +1,5 @@
 print("hello Sir")
 
-
 from Website import create_app
 
 app = create_app()
