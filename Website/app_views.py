@@ -115,6 +115,20 @@ def delete_post(post_id):
         db.session.delete(post)
         db.session.commit()
         flash('Post Deleted Successfully', category='success')
+    return redirect(url_for('app_views.app_feed'))
 
-
+@app_views.route("/create-comment/<int:post_id>", methods=['POST'])
+@login_required
+def create_comment(post_id):
+    comment = request.form.get('comment')
+    if not comment:
+        flash("Comment cannot be empty.", category='error')
+    else:
+        post = Post.query.filter_by(id=post_id)
+        if post:
+            comment_obj = Comment(comment=comment, commenter=current_user.id, post_id=post_id)
+            db.session.add(comment_obj)
+            db.session.commit()
+        else:
+            flash("Post does not exit", category='error')
     return redirect(url_for('app_views.app_feed'))

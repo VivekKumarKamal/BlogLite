@@ -22,8 +22,8 @@
             </div>
 
             </div>
-            <div class="dropdown">
-                  <button class="btn primary dropdown-toggle"
+            <div class="dropdown dropdown-more">
+                  <button class="btn primary dropdown-toggle dropdown-toggle-more"
                           type="button" id="dropdownMenuButton"
                           data-toggle="dropdown"
                           aria-haspopup="true"
@@ -68,6 +68,7 @@
                 <div class="title">{{ post_obj.title }}</div>
                 <img class="image" src="data:image/jpeg;base64, {{ image_data }}" alt="image" width="350px">
             </div>
+
             <div class="like_cmnt">
                 {% if  Like.query.filter_by(post_id=post_obj.id, liker_id=current_user.id).first() %}
 
@@ -86,7 +87,49 @@
                     <i class="far fa-comment-dots"></i>
                     {{ post_obj.comments|length }}
                 </button>
+
+<!--                Here is the dropdown for comment    -->
             </div>
+
+                <div class="card-body">
+
+
+                    <form class="input-group mb-3" method="POST" action="/create-comment/{{ post_obj.id }}">
+                        <input
+                            type="text"
+                            id="comment"
+                            name="comment"
+                            class="form-control"
+                            placeholder="Write your comment here!"
+                        />
+                        <button type="submit" class="btn btn-primary">Comment</button>
+                    </form>
+
+                    <div class="collapsek" id="comments-{{ post_obj.id }}">
+                        <div class="card">
+                            <div class="card-body" id="comments-expanded-{{ post_obj.id }}">
+                                {% for text in post_obj.comments %}
+                                    <div style="width: 315px;" class="d-flex justify-content-between align-items-center">
+
+                                        <div>
+                                            <a href="/profile/{{ text.user.user_name }}">{{ text.user.user_name }}</a>
+                                        </div>
+                                        <div class="overflow-auto">
+                                            {{ text.comment }}
+                                        </div>
+                                    </div>
+                                    <hr>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                    </div>
+                        <br><br>
+
+
+                </div>
+
+
         </div>
         <div class="capt">
             Caption
@@ -123,7 +166,7 @@
     margin-left: 7px;
 }
 
-.dropdown-toggle{
+.dropdown-toggle-more{
     position:relative;
     right:-120px;
 }
@@ -197,7 +240,7 @@
     color: rgb(253, 0, 0);
 }
 
-.dropdown{
+.dropdown-more{
     width: 200px;
     position: relative;
 }
