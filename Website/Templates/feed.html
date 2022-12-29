@@ -83,29 +83,38 @@
                         {{ post_obj.likes|length }}
                     </span>
                 {% endif %}
+
+                <a data-toggle="collapse" href="#comments-{{ post_obj.id }}" role="button">
                 <button class="just_post_btn">
                     <i class="far fa-comment-dots"></i>
                     {{ post_obj.comments|length }}
                 </button>
-
-<!--                Here is the dropdown for comment    -->
+                </a>
             </div>
 
+
+                <p class="card-text">
+                    {% if post_obj.comments|length == 0 %}
+                        <p class="text-muted align-items-center">No Comments</p>
+                    {% endif %}
+                </p>
                 <div class="card-body">
 
+                    <div class="collapse" id="comments-{{ post_obj.id }}">
 
-                    <form class="input-group mb-3" method="POST" action="/create-comment/{{ post_obj.id }}">
-                        <input
-                            type="text"
-                            id="comment"
-                            name="comment"
-                            class="form-control"
-                            placeholder="Write your comment here!"
-                        />
-                        <button type="submit" class="btn btn-primary">Comment</button>
-                    </form>
 
-                    <div class="collapsek" id="comments-{{ post_obj.id }}">
+                        <form class="input-group mb-3" method="POST" action="/create-comment/{{ post_obj.id }}">
+                            <input
+                                type="text"
+                                id="comment"
+                                name="comment"
+                                class="form-control"
+                                placeholder="Write your comment here!"
+                            />
+                            <button type="submit" class="btn btn-primary">Comment</button>
+                        </form>
+
+
                         <div class="card">
                             <div class="card-body" id="comments-expanded-{{ post_obj.id }}">
                                 {% for text in post_obj.comments %}
@@ -122,8 +131,9 @@
                                 {% endfor %}
                             </div>
                         </div>
-
                     </div>
+
+
                         <br><br>
 
 
