@@ -14,10 +14,15 @@ def app_feed():
     posts = []
     post_objects = Post.query.filter_by(hide=0).order_by(Post.timestamp.desc())
 
+    flwing_id = []
+    for i in current_user.followings:
+        flwing_id.append(i.following_id)
+
     for obj in post_objects:
-        image_data = base64.b64encode(obj.img).decode('utf-8')
-        tup = (obj, image_data)
-        posts.append(tup)
+        if obj.user_id in flwing_id or obj.user_id == current_user.id:
+            image_data = base64.b64encode(obj.img).decode('utf-8')
+            tup = (obj, image_data)
+            posts.append(tup)
 
     return render_template('feed.html', user=current_user, User=User, Like=Like, posts=posts)
 
