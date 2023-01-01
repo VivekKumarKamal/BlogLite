@@ -100,12 +100,12 @@ def following(user_name):
 @app_auth.route('/profile/<user_name>', methods=['GET', 'POST'])
 @login_required
 def profile(user_name):
-    user = User.query.filter_by(user_name=user_name).first()
-    flwr_count = Follower.query.filter_by(user_id=user.id).count()
-    flwg_count = Following.query.filter_by(user_id=user.id).count()
-    if user:
-        return render_template('profile_page.html', form=SearchForm, user_name=user_name, name=user.name,
-                               flwr_count=flwr_count, flwg_count=flwg_count, user=current_user)
+    user_obj = User.query.filter_by(user_name=user_name).first()
+    flwr_count = Follower.query.filter_by(user_id=user_obj.id).count()
+    flwg_count = Following.query.filter_by(user_id=user_obj.id).count()
+    if user_obj:
+        return render_template('profile_page.html', form=SearchForm, user_name=user_name, name=user_obj.name,
+                               flwr_count=flwr_count, flwg_count=flwg_count, user_obj=user_obj, user=current_user)
     else:
         return "This user does not exist"
 

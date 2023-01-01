@@ -24,20 +24,20 @@
 
             </div>
             <div class="ms-3" style="margin-top: 130px; ">
-              <h3>{{ name }}</h3>
-              <h6>{{ user_name }}</h6>
+              <h3>{{ user_obj.name }}</h3>
+              <h6>{{ user_obj.user_name }}</h6>
 
             </div>
           </div>
           <div class="p-4 text-black" style="background-color: #f8f9fa;">
             <div class="d-flex justify-content-end text-center py-1">
               <div>
-                <p class="mb-1 h5">{{ user.posts|length }}</p>
+                <p class="mb-1 h5">{{ user_obj.posts|length }}</p>
                 <p class="small text-muted mb-0">Photos</p>
               </div>
               <div class="px-3">
                 <a href="/followers/{{ user_name }}">
-                <p class="mb-1 h5">{{ flwr_count }}</p>
+                <p class="mb-1 h5">{{ user_obj.followers|length }}</p>
                 <p class="small text-muted mb-0">Followers</p>
                 </a>
               </div>

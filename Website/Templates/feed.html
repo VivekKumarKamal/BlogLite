@@ -115,25 +115,31 @@
 
                         <div class="card">
                             <div class="card-body" id="comments-expanded-{{ post_obj.id }}">
-                                {% for text in post_obj.comments %}
+                                {% for cmnt in post_obj.comments %}
                                     <div style="width: 315px;" class="d-flex justify-content-between align-items-center">
 
                                         <div>
-                                            <a href="/profile/{{ text.user.user_name }}">{{ text.user.user_name }}</a>
+                                            <a href="/profile/{{ cmnt.user.user_name }}">{{ cmnt.user.user_name }}</a>
                                         </div>
                                         <div class="overflow-auto">
-                                            {{ text.comment }}
+                                            {{ cmnt.comment }}
                                         </div>
 
                                         <div class="btn-group">
                                             <button type="button"
                                                     class="btn btn-sm btn-primary dropdown-toggle"
                                                     data-toggle="dropdown"></button>
-                                            <ul class="dropdown-menu">
+
+                                            <ul class="dropdown-menu drp_menu_cmnt">
                                                 <li>
-                                                    <a href="/delete-comment/{{ text.id }}">Delete</a>
+                                                    <a class="dropdown-item" href="/delete-comment/{{ cmnt.id }}">Copy Comment</a>
+                                                </li>
+                                                {% if cmnt.commenter == current_user.id or cmnt.post.user_id == current_user.id %}
+                                                <li>
+                                                    <a class="dropdown-item" href="/delete-comment/{{ cmnt.id }}">Delete</a>
                                                 </li>
                                             </ul>
+                                            {% endif %}
                                         </div>
                                     </div>
                                     <hr>
@@ -310,7 +316,9 @@
     transform: scale(1.1);
 }
 
-
+.drp_menu_cmnt{
+    transform:translate(-100px, 0);
+}
 </style>
 
 
