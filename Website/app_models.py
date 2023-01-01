@@ -19,7 +19,7 @@ class User(db.Model, UserMixin):
     followers = db.relationship('Follower')
     followings = db.relationship('Following')
 
-    posts = db.relationship('Post', passive_deletes=True)
+    posts = db.relationship('Post', backref='user', passive_deletes=True)
 
     likes = db.relationship('Like', backref='user', passive_deletes=True)
     comments = db.relationship('Comment', backref='user', passive_deletes=True)

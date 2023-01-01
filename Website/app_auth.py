@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from flask_login import login_user, login_required, logout_user, current_user
 from sqlalchemy.orm import Session
-from sqlalchemy import create_engine, select, exc
+from sqlalchemy import create_engine, select, exc, func
 from . import DB_NAME
 import imghdr
 import base64
@@ -153,6 +153,8 @@ def create_post(user_name):
         file = request.files['image']
         file_type = imghdr.what(file)
 
+        # I am giving  freedom of not putting any title or caption in post if the user wants not to put
+
         title = request.form.get('title')
         caption = request.form.get('caption')
         user_id = current_user.id
@@ -170,39 +172,47 @@ def create_post(user_name):
     return render_template('create_post.html', user_name=user_name, user=current_user)
 
 
+@app_auth.route("/edit-post-<int:post_id>", methods=["GET", "POST"])
+def edit_post(post_id):
+    post = Post.query.filter_by(id=post_id).first()
+
+    if not post:
+        flash("No Post Found", category='error')
+        return redirect(url_for('app_views.app_feed'))
+    if post.user_id != current_user.id:
+        flash("You cannot edit this post as you are not the owner", category='error')
+        return redirect(url_for('app_views.app_feed'))
+    else:
+        if request.method == "GET":
+            return render_template('edit_post.html', user=current_user, post=post)
+        if request.method == "POST":
+
+            title = request.form.get('title')
+            caption = request.form.get('caption')
+
+            # updating here
+            post.title = title
+            post.caption = caption
+            post.timestamp = func.now()
+            db.session.commit()
+
+            image_data = base64.b64encode(post.img).decode('utf-8')
+
+            return render_template('just_a_post.html', User=User, Like=Like, user=current_user, post_obj=post, image_data=image_data)
+
+
 @app_auth.route('/post/<int:id>')
 @login_required
 def see_post(id):
     post_obj = Post.query.filter_by(id=id).first()
-    if not post_obj:
-        return "<h2>Post not found</h2>", 404
 
-    # error code 404 = bad request
+    if not post_obj or (post_obj.hide == 1 and current_user.id != post_obj.user_id):
+        flash("This post is hidden and only visible to the owner.", category='error')
+        return redirect(url_for('app_views.app_feed'))
 
-    if post_obj.hide == 1 and current_user.id != post_obj.user_id:
-        return "<h2>This post is hidden and only visible to the owner.</h2>", 400
-    image_data = base64.b64encode(post_obj.img).decode('utf-8')
-    post_owner = User.query.filter_by(id=post_obj.user_id).first()
-
-    likes = post_obj.likes
-    # print(likes)
-    comments = post_obj.comments
-    likes_count = len(likes)
-    comments_count = len(comments)
-
-    liked = Like.query.filter_by(post_id=post_obj.id, liker_id=current_user.id).first()
-    # print(liked)
-    lkd = 0
-    if liked:
-        lkd = 1
     return render_template('just_a_post.html',
                            user=current_user,
-                           owner=post_owner,
-                           lc=likes_count,
-                           cc=comments_count,
-                           img_data=image_data,
                            post=post_obj,
-                           lkd=lkd
                            )
 
 
@@ -219,3 +229,5 @@ def delete_comment(comment_id):
     else:
         flash("Comment does not exist.", category='error')
     return redirect(url_for('app_views.app_feed'))
+
+

@@ -1,81 +1,165 @@
-{% extends "app_base.html" %}{% block title %}Search Results{% endblock %}
+{% extends "app_base.html" %}
+{% block title %}Feed{% endblock %}
 {% block content %}
+
+
 
 
 
 <div class="just_post_cont">
         <div class="just_post_profile_section">
             <div class="profile">
-                <a href="/profile/{{ owner.user_name }}">
-                    <img class="profile_pic" src="data:image/jpeg;base64, {{ img_data }}" alt="" width="50px" height="50px">
+                <a href="/profile/{{ User.query.filter_by(id=post_obj.user_id).first().user_name }}">
+                    <img class="profile_pic" src="data:image/jpeg;base64, {{ image_data }}" alt="" width="50px" height="50px">
                 </a>
             </div>
             <div class="just_post_name">
-                {{ owner.name }}
+                {{ User.query.filter_by(id=post_obj.user_id).first().name }}
 
             <div class="just_post_name user_name">
-                {{ owner.user_name }}
+                {{ User.query.filter_by(id=post_obj.user_id).first().user_name }}
             </div>
-            </div>
-            {% if user.id == post.user_id %}
-                {% if post.hide != 1 %}
-                    <div class="hide_post more_btn">
-                        <a href="/hide-post/{{ post.id }}">
-                            hide
-                        </a>
-                    </div>
-                {% else %}
-                    <div class="hide_post more_btn">
-                        <a href="/hide-post/{{ post.id }}">
-                            hidden
-                        </a>
-                    </div>
-                {% endif %}
-            <div class="delete_post">
-                <button type="button" onclick="deletePost({{ post.id }})">
-                    Delete
-                </button>
-            </div>
-            {% endif %}
-<!--            <form class="just_post_follow" method="POST">-->
 
-<!--                <button class="just_post_follow_btn" onclick="">-->
-<!--                    <i class="fas fa-plus"></i>-->
-<!--                    Unfollow-->
-<!--                </button>-->
-<!--          </form>-->
+            </div>
+            <div class="dropdown dropdown-more">
+                  <button class="btn primary dropdown-toggle dropdown-toggle-more"
+                          type="button" id="dropdownMenuButton"
+                          data-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false">
+                      More
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" type="button" onclick="copyToClipboard({{ post_obj.id }})">Share</a>
+                    {% if user.id == post_obj.user_id %}
+                    <a class="dropdown-item" type="button" onClick="deletePost({{ post_obj.id }})">Delete</a>
+                    <a class="dropdown-item" type="button" onclick="hidePost({{ post_obj.id }})">Hide</a>
+                    <a class="dropdown-item" type="button" href="/edit-post-{{ post_obj.id }}">Edit</a>
+                    {% endif %}
+                  </div>
+            </div>
+
+<!--            <div class="dropdown">-->
+<!--                <button id="{{ post_obj.id }}" class="click">&#8942;</button>-->
+<!--                <div class="list">-->
+
+<!--                    <button class="links">Share</button>-->
+
+<!--                    {% if user.id == post_obj.user_id %}-->
+<!--                        <a href="/hide-post/{{ post_obj.id }}" class="links">Hide</a>-->
+<!--                        <button type="button" onClick="deletePost({{ post_obj.id }})" class="links">Delete</button>-->
+<!--                        <button class="links">Edit</button>-->
+<!--                    {% endif %}-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <script>-->
+<!--                let click{{ post_obj.id }} = document.querySelector('.click');-->
+<!--                        let list = document.querySelector('.list');-->
+<!--                        click{{ post_obj.id }}.addEventListener("click", ()=>{-->
+<!--                            list.classList.toggle('newlist');-->
+<!--                        });-->
+<!--            </script>-->
         </div>
+
 
         <div class="image_like_cmnt">
             <div>
-                <div class="title">{{ post.title }}</div>
-                <img class="image" src="data:image/jpeg;base64, {{ img_data }}" alt="image" width="350px">
+                <div class="title">{{ post_obj.title }}</div>
+                <img class="image" src="data:image/jpeg;base64, {{ image_data }}" alt="image" width="350px">
             </div>
-            <div class="like_cmnt">
-                {% if lkd == 1 %}
 
-                    <i class="fas fa-heart" id="like-button-{{ post.id }}" onclick="likePost({{ post.id }})"></i>
-                    <span id="likes-count-{{post.id}}">
-                        {{ post.likes|length }}
+            <div class="like_cmnt">
+                {% if  Like.query.filter_by(post_id=post_obj.id, liker_id=current_user.id).first() %}
+
+                    <i class="fas fa-heart" id="like-button-{{ post_obj.id }}" onclick="likePost({{ post_obj.id }})"></i>
+                    <span id="likes-count-{{post_obj.id}}">
+                        {{ post_obj.likes|length }}
                     </span>
                 {% else %}
 
-                    <i class="far fa-heart" id="like-button-{{ post.id }}" onclick="likePost({{ post.id }})"></i>
-                    <span id="likes-count-{{post.id}}">
-                        {{ post.likes|length }}
+                    <i class="far fa-heart" id="like-button-{{ post_obj.id }}" onclick="likePost({{ post_obj.id }})"></i>
+                    <span id="likes-count-{{post_obj.id}}">
+                        {{ post_obj.likes|length }}
                     </span>
                 {% endif %}
+
+                <a data-toggle="collapse" href="#comments-{{ post_obj.id }}" role="button">
                 <button class="just_post_btn">
                     <i class="far fa-comment-dots"></i>
-                    {{ cc }}
+                    {{ post_obj.comments|length }}
                 </button>
+                </a>
             </div>
+
+
+                <p class="card-text">
+
+                </p>
+                <div class="card-body">
+
+                    <div class="collapse" id="comments-{{ post_obj.id }}">
+
+
+                        <form class="input-group mb-3" method="POST" action="/create-comment/{{ post_obj.id }}">
+                            <input
+                                type="text"
+                                id="comment"
+                                name="comment"
+                                class="form-control"
+                                placeholder="Write your comment here!"
+                            />
+                            <button type="submit" class="btn btn-primary">Comment</button>
+                        </form>
+
+
+                        <div class="card">
+                            <div class="card-body" id="comments-expanded-{{ post_obj.id }}">
+                                {% for cmnt in post_obj.comments %}
+                                    <div style="width: 315px;" class="d-flex justify-content-between align-items-center">
+
+                                        <div>
+                                            <a href="/profile/{{ cmnt.user.user_name }}">{{ cmnt.user.user_name }}</a>
+                                        </div>
+                                        <div class="overflow-auto">
+                                            {{ cmnt.comment }}
+                                        </div>
+
+                                        <div class="btn-group">
+                                            <button type="button"
+                                                    class="btn btn-sm btn-primary dropdown-toggle"
+                                                    data-toggle="dropdown"></button>
+
+                                            <ul class="dropdown-menu dropdown-menu-right">
+                                                <li>
+                                                    <a class="dropdown-item" href="/delete-comment/{{ cmnt.id }}">Copy Comment</a>
+                                                </li>
+                                                {% if cmnt.commenter == current_user.id or cmnt.post.user_id == current_user.id %}
+                                                <li>
+                                                    <a class="dropdown-item" href="/delete-comment/{{ cmnt.id }}">Delete</a>
+                                                </li>
+                                            </ul>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <hr>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+                </div>
+
+
         </div>
         <div class="capt">
             Caption
         </div>
         <div class="caption">
-            {{ post.caption }}
+            {{ post_obj.caption }}
         </div>
     </div>
 
@@ -90,6 +174,8 @@
     margin-right: auto;
     box-shadow: 0px 0px 18px black;
     border: none;
+    margin-top:30px;
+    margin-bottom:40px;
 }
 .just_post_profile_section{
     display: flex;
@@ -101,12 +187,14 @@
     margin: 5px;
 }
 .just_post_name{
-    margin-left: 5px;
+    margin-left: 7px;
 }
-.just_post_follow{
-    position: relative;
-    right: -67px;
+
+.dropdown-toggle-more{
+    position:relative;
+    right:-120px;
 }
+
 .just_post_follow_btn{
     border-radius: 7px;
     height: 30px;
@@ -175,8 +263,54 @@
 .just_post_btn:hover{
     color: rgb(253, 0, 0);
 }
-</style>
 
+.dropdown-more{
+    width: 200px;
+    position: relative;
+}
+.click{
+    background: none;
+    padding: 12px;
+    font-size: 1.2em;
+    font-family: Futura Md BT;
+    border: none;
+    outline: none;
+    width: 20px;
+    color: rgb(0, 0, 0);
+    transition: 0.3s;
+    position: relative;
+    right: -130px;
+}
+.click:hover{
+    background-color: rgb(109, 109, 109);
+}
+.links{
+    padding: 10px;
+    font-size: 1.2em;
+    font-family: Futura Md BT;
+    border: none;
+    border-radius: 2px;
+    outline: none;
+    width: 100px;
+    color: rgb(0, 0, 0);
+    transition: 0.3s;
+    background-color: rgb(255, 255, 255);
+}
+.list{
+    position: absolute;
+    right: 0px;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: 0.31s;
+    border-radius: 20px;
+    z-index: 100;
+}
+.newlist{
+    transform: scaleY(1);
+
+}
+
+</style>
 
 
 {% endblock %}

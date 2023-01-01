@@ -1,6 +1,24 @@
 {% extends "app_base.html" %}
-{% block title %}Editing...{% endblock %}
+{% block title %}Edit Post{% endblock %}
 {% block content %}
+
+
+<div class="container">
+<form action="/edit-post-{{ post.id }}" method="post" enctype="multipart/form-data">
+  <div class="form-group">
+    <label for="title">Title:</label><br>
+    <input type="text" class="form-control" id="title" name="title" value="{{ post.title }}"><br>
+  </div>
+
+  <div class="form-group">
+    <label for="caption">Caption:</label><br>
+    <textarea class="form-control" id="caption" name="caption">{{ post.caption }}</textarea><br>
+  </div>
+
+
+  <input type="submit" class="btn btn-primary" value="Submit">
+</form>
+</div>
 
 
 {% endblock %}

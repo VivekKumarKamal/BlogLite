@@ -4,7 +4,7 @@
 
 
 
-{% for post_obj, image_data in posts %}
+{% for (post_obj, image_data) in posts %}
 
 
 <div class="just_post_cont">
@@ -30,7 +30,7 @@
                           aria-expanded="false">
                       More
                   </button>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" type="button" onclick="copyToClipboard({{ post_obj.id }})">Share</a>
                     {% if user.id == post_obj.user_id %}
                     <a class="dropdown-item" type="button" onClick="deletePost({{ post_obj.id }})">Delete</a>
@@ -130,7 +130,7 @@
                                                     class="btn btn-sm btn-primary dropdown-toggle"
                                                     data-toggle="dropdown"></button>
 
-                                            <ul class="dropdown-menu drp_menu_cmnt">
+                                            <ul class="dropdown-menu dropdown-menu-right">
                                                 <li>
                                                     <a class="dropdown-item" href="/delete-comment/{{ cmnt.id }}">Copy Comment</a>
                                                 </li>
@@ -311,14 +311,6 @@
 
 }
 
-.dropdown-item:hover{
-<!--    background-color: rgb(192, 192, 192);-->
-    transform: scale(1.1);
-}
-
-.drp_menu_cmnt{
-    transform:translate(-100px, 0);
-}
 </style>
 
 
