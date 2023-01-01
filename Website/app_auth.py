@@ -73,7 +73,7 @@ def signup():
             flash('Account Created!', category='success')
             login_user(new_user, remember=True)
 
-            return redirect(url_for('app_auth.profile', user=current_user, user_name=new_user.user_name))
+            return redirect(url_for('app_auth.edit_profile', user=current_user, user_name=new_user.user_name))
 
     return render_template('sign_up.html', user=current_user)
 
@@ -103,7 +103,7 @@ def profile(user_name):
     user_obj = User.query.filter_by(user_name=user_name).first()
 
     if user_obj:
-        return render_template('profile_page.html', user=current_user)
+        return render_template('profile_page.html', base64=base64, user_obj=user_obj, user=current_user)
     else:
         return "This user does not exist"
 
@@ -121,7 +121,7 @@ def search():
     if request.method == 'GET':
         return redirect(url_for('app_views.app_feed'))
     searched = request.form.get('searched')
-    return redirect(url_for('app_auth.searched', searched=searched))
+    return redirect(url_for('app_auth.searched', base64=base64, searched=searched))
 
 
 @app_auth.route('/search/results/<searched>', methods=['POST', 'GET'])
@@ -140,7 +140,7 @@ def searched(searched):
             found.append((a, 0, 0))
     # temp = current_user.following
 
-    return render_template('searched_user.html', lis=found, user=current_user, searched=searched)
+    return render_template('searched_user.html', lis=found, base64=base64, user=current_user, searched=searched)
 
 
 @app_auth.route('/<user_name>/create-post', methods=['GET', 'POST'])
@@ -235,8 +235,10 @@ def edit_profile(user_name):
     user = User.query.filter_by(user_name=user_name).first()
     if not user:
         flash("User not found", category='error')
+        return redirect(url_for('app_views.app_feed'))
     if user.id != current_user.id:
         flash("You cannot edit someone else's profile", category='error')
+        return redirect(url_for('app_views.app_feed'))
     else:
         if request.method == "POST":
             name = request.form.get('name')
@@ -254,7 +256,7 @@ def edit_profile(user_name):
                 user.mimetype = mimetype
                 db.session.commit()
 
-            return render_template("profile_page.html", user=current_user, user_name=user.user_name)
+            return render_template("profile_page.html", base64=base64, user=current_user, user_name=user.user_name)
 
         return render_template("edit_profile.html", user=user)
 
