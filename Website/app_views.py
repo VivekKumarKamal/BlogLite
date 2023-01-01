@@ -38,6 +38,12 @@ def remove_follower():
         if flwr.user_id == current_user.id:
             db.session.delete(flwr)
             db.session.commit()
+
+            flwg = Following.query.filter_by(following_id=current_user.id, user_id=flwr_id).first()
+            db.session.delete(flwg)
+            db.session.commit()
+        else:
+            flash("You cannot remove someone else's follower.", category='error')
     return jsonify({})
 
 @app_views.route('/unfollow', methods=['POST'])
@@ -49,6 +55,13 @@ def unfollow():
         if flwg.user_id == current_user.id:
             db.session.delete(flwg)
             db.session.commit()
+
+            flwr = Follower.query.filter_by(follower_id=current_user.id, user_id=flwg_id).first()
+            db.session.delete(flwr)
+            db.session.commit()
+        else:
+            flash("You cannot manage someone else's following.", category='error')
+
     return jsonify({})
 
 @app_views.route('/follow', methods=['POST'])
@@ -58,6 +71,10 @@ def follow():
 
         new_following = Following(user_id=current_user.id, following_id=person_id)
         db.session.add(new_following)
+        db.session.commit()
+
+        new_follower = Follower(user_id=person_id, follower_id=current_user.id)
+        db.session.add(new_follower)
         db.session.commit()
 
         return jsonify({})
