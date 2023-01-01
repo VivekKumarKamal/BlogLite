@@ -3,8 +3,11 @@
 {% block content %}
 
 <div class="container">
+<h2 align="center">Create a Post</h2>
 <form action="/{{ user_name }}/create-post" method="post" enctype="multipart/form-data">
+
   <div class="form-group">
+
     <label for="title">Title:</label><br>
     <input type="text" class="form-control" id="title" name="title"><br>
   </div>
@@ -16,7 +19,7 @@
 
   <div class="form-group">
     <label for="img">Image:</label>
-    <input type="file" class="form-control" id="img" name="image"><br>
+    <input type="file" class="form-control" id="img" name="image" required><br>
   </div>
 
   <input type="submit" class="btn btn-primary" value="Submit">

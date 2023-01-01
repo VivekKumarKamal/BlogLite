@@ -20,11 +20,9 @@ def app_feed():
 
     for obj in post_objects:
         if obj.user_id in flwing_id or obj.user_id == current_user.id:
-            image_data = base64.b64encode(obj.img).decode('utf-8')
-            tup = (obj, image_data)
-            posts.append(tup)
+            posts.append(obj)
 
-    return render_template('feed.html', user=current_user, User=User, Like=Like, posts=posts)
+    return render_template('feed.html', user=current_user, base64=base64, User=User, Like=Like, posts=posts)
 
 
 

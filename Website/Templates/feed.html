@@ -4,14 +4,14 @@
 
 
 
-{% for (post_obj, image_data) in posts %}
+{% for post_obj in posts %}
 
 
 <div class="just_post_cont">
         <div class="just_post_profile_section">
             <div class="profile">
                 <a href="/profile/{{ User.query.filter_by(id=post_obj.user_id).first().user_name }}">
-                    <img class="profile_pic" src="data:image/jpeg;base64, {{ image_data }}" alt="" width="50px" height="50px">
+                    <img class="profile_pic" src="data:image/jpeg;base64, {{ base64.b64encode(user.profile_pic).decode('utf-8') }}" alt="" width="50px" height="50px">
                 </a>
             </div>
             <div class="just_post_name">
@@ -66,7 +66,7 @@
         <div class="image_like_cmnt">
             <div>
                 <div class="title">{{ post_obj.title }}</div>
-                <img class="image" src="data:image/jpeg;base64, {{ image_data }}" alt="image" width="350px">
+                <img class="image" src="data:image/jpeg;base64, {{ base64.b64encode(post_obj.img).decode('utf-8') }}" alt="image" width="350px">
             </div>
 
             <div class="like_cmnt">

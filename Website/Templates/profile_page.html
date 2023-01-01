@@ -18,37 +18,39 @@
 
               <button type="button" class="btn btn-outline-dark" data-mdb-ripple-color="dark"
                 style="z-index: 1;">
+                <a href="/edit-profile/{{ user.user_name }}">
                 Edit profile
+                  </a>
               </button>
 
 
             </div>
             <div class="ms-3" style="margin-top: 130px; ">
-              <h3>{{ user_obj.name }}</h3>
-              <h6>{{ user_obj.user_name }}</h6>
+              <h3>{{ user.name }}</h3>
+              <h6>{{ user.user_name }}</h6>
 
             </div>
           </div>
           <div class="p-4 text-black" style="background-color: #f8f9fa;">
             <div class="d-flex justify-content-end text-center py-1">
               <div>
-                <p class="mb-1 h5">{{ user_obj.posts|length }}</p>
+                <p class="mb-1 h5">{{ user.posts|length }}</p>
                 <p class="small text-muted mb-0">Photos</p>
               </div>
               <div class="px-3">
-                <a href="/followers/{{ user_name }}">
-                <p class="mb-1 h5">{{ user_obj.followers|length }}</p>
+                <a href="/followers/{{ user.user_name }}">
+                <p class="mb-1 h5">{{ user.followers|length }}</p>
                 <p class="small text-muted mb-0">Followers</p>
                 </a>
               </div>
               <div>
-                {% if flwg_count != 0 %}
-                <a href="/following/{{ user_name }}">
-                <p class="mb-1 h5">{{ flwg_count }}</p>
+                {% if user.followers|length != 0 %}
+                <a href="/following/{{ user.user_name }}">
+                <p class="mb-1 h5">{{ user.followings|length }}</p>
                 <p class="small text-muted mb-0">Following</p>
                 </a>
                 {% else %}
-                <p class="mb-1 h5">{{ flwg_count }}</p>
+                <p class="mb-1 h5">{{ user.followers|length }}</p>
                 <p class="small text-muted mb-0">Following</p>
                 {% endif %}
               </div>

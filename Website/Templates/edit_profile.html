@@ -1,0 +1,38 @@
+{% extends "app_base.html" %}{% block title %}Sign-up{% endblock %}{% block content %}
+
+<form action="/edit-profile/{{ user.user_name }}" method="POST" enctype="multipart/form-data">
+    <h2 align="center">Edit Profile</h2>
+    <br>
+
+    <div class="form-group">
+        <label for="name">Name:</label><br>
+        <input
+                type="text"
+                name="name"
+                id="name"
+                class="form-control"
+                value="{{ user.name }}"
+                required >
+    </div> <br>
+
+    <div class="form-group">
+        <label for="img">Profile Photo:</label>
+        <input type="file" class="form-control" id="img" name="image"><br>
+    </div> <br>
+
+    <div class="form-group">
+        <label for="about">About:</label><br>
+        <input
+                type="text"
+                name="about"
+                id="about"
+                class="form-control"
+                value="{{ user.about }}"
+                >
+    </div> <br>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+
+{% endblock %}

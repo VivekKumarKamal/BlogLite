@@ -101,11 +101,9 @@ def following(user_name):
 @login_required
 def profile(user_name):
     user_obj = User.query.filter_by(user_name=user_name).first()
-    flwr_count = Follower.query.filter_by(user_id=user_obj.id).count()
-    flwg_count = Following.query.filter_by(user_id=user_obj.id).count()
+
     if user_obj:
-        return render_template('profile_page.html', form=SearchForm, user_name=user_name, name=user_obj.name,
-                               flwr_count=flwr_count, flwg_count=flwg_count, user_obj=user_obj, user=current_user)
+        return render_template('profile_page.html', user=current_user)
     else:
         return "This user does not exist"
 
@@ -229,5 +227,35 @@ def delete_comment(comment_id):
     else:
         flash("Comment does not exist.", category='error')
     return redirect(url_for('app_views.app_feed'))
+
+
+@app_auth.route("/edit-profile/<user_name>", methods=["POST", "GET"])
+@login_required
+def edit_profile(user_name):
+    user = User.query.filter_by(user_name=user_name).first()
+    if not user:
+        flash("User not found", category='error')
+    if user.id != current_user.id:
+        flash("You cannot edit someone else's profile", category='error')
+    else:
+        if request.method == "POST":
+            name = request.form.get('name')
+            about = request.form.get('about')
+
+            user.name = name
+            user.about = about
+
+            file = request.files['image']
+            file_type = imghdr.what(file)
+
+            if file_type in ['jpeg', 'png']:
+                mimetype = file.mimetype
+                user.profile_pic = file.read()
+                user.mimetype = mimetype
+                db.session.commit()
+
+            return render_template("profile_page.html", user=current_user, user_name=user.user_name)
+
+        return render_template("edit_profile.html", user=user)
 
 

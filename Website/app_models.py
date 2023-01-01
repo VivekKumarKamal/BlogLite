@@ -15,6 +15,8 @@ class User(db.Model, UserMixin):
     user_name = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(20))
     profile_pic = db.Column(db.LargeBinary)
+    mimetype = db.Column(db.Text)
+    about = db.Column(db.String(200))
 
     followers = db.relationship('Follower')
     followings = db.relationship('Following')
