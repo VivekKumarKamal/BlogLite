@@ -11,7 +11,7 @@
         <div class="just_post_profile_section">
             <div class="profile">
                 <a href="/profile/{{ User.query.filter_by(id=post_obj.user_id).first().user_name }}">
-                    <img class="profile_pic" src="data:image/jpeg;base64, {{ base64.b64encode(user.profile_pic).decode('utf-8') }}" alt="" width="50px" height="50px">
+                    <img class="profile_pic" src="data:image/jpeg;base64, {{ base64.b64encode(User.query.filter_by(id=post_obj.user_id).first().profile_pic).decode('utf-8') }}" alt="" width="50px" height="50px">
                 </a>
             </div>
             <div class="just_post_name">
