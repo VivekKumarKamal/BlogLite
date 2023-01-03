@@ -256,7 +256,7 @@ def edit_profile(user_name):
                 user.mimetype = mimetype
                 db.session.commit()
 
-            return render_template("profile_page.html", base64=base64, user=current_user, user_name=user.user_name)
+            return render_template("profile_page.html", base64=base64, user=current_user, user_obj=current_user, user_name=user.user_name)
 
         return render_template("edit_profile.html", user=user)
 
