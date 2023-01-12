@@ -9,6 +9,7 @@ from sqlalchemy import create_engine, select, exc, func
 from . import DB_NAME
 import imghdr
 import base64
+import imageio as io
 
 
 # engine = create_engine(f"sqlite:///./{DB_NAME}")
@@ -66,14 +67,16 @@ def signup():
 
         else:
             # new_user = User(user_name=user_name, name=name, password=generate_password_hash(password, method='sha256'))
-            new_user = User(user_name=user_name, name=name, password=password)
+            pic =
+            mimetype = pic.mimetype
+            new_user = User(user_name=user_name, name=name, profile_pic=pic,mimetype=mimetype, password=password)
             db.session.add(new_user)
             db.session.commit()
 
             flash('Account Created!', category='success')
             login_user(new_user, remember=True)
 
-            return redirect(url_for('app_auth.edit_profile', user=current_user, user_name=new_user.user_name))
+            return redirect(url_for('app_auth.edit_profile', user=current_user, zip=zip, user_name=new_user.user_name))
 
     return render_template('sign_up.html', user=current_user)
 
@@ -81,7 +84,7 @@ def signup():
 # @app_auth.route('/profile', methods=['GET'])
 # @login_required
 # def profile():
-#     return render_template('profile_page.html')
+#     return render_template('profile.html')
 
 @app_auth.route('/followers/<user_name>', methods=['GET', 'POST'])
 @login_required
@@ -103,7 +106,7 @@ def profile(user_name):
     user_obj = User.query.filter_by(user_name=user_name).first()
 
     if user_obj:
-        return render_template('profile_page.html', base64=base64, user_obj=user_obj, user=current_user)
+        return render_template('profile.html', base64=base64, user_obj=user_obj, zip=zip, user=current_user)
     else:
         return "This user does not exist"
 
@@ -256,7 +259,7 @@ def edit_profile(user_name):
                 user.mimetype = mimetype
                 db.session.commit()
 
-            return render_template("profile_page.html", base64=base64, user=current_user, user_obj=current_user, user_name=user.user_name)
+            return render_template("profile.html", base64=base64, user=current_user, user_obj=current_user, user_name=user.user_name)
 
         return render_template("edit_profile.html", user=user)
 

@@ -66,6 +66,9 @@ def unfollow():
 def follow():
         person = json.loads(request.data)
         person_id = person['personId']
+        check_following = Following.query.filter_by(user_id=current_user, following_id=person_id).first()
+        if check_following:
+            return jsonify({})
 
         new_following = Following(user_id=current_user.id, following_id=person_id)
         db.session.add(new_following)

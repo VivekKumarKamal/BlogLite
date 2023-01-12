@@ -1,0 +1,121 @@
+{% extends "app_base.html" %}{% block title %}Profile{% endblock %}{% block content %}
+
+
+
+
+<div class="main_section container">
+    <div class="profile_section">
+      <div class="profile">
+        {% if user.profile_pic %}
+              <img src="data:image/jpeg;base64, {{ base64.b64encode(user_obj.profile_pic).decode('utf-8') }}"
+                alt="image" class="img-fluid img-thumbnail mt-4 mb-2"
+                style="width: 150px; z-index: 1; border-radius:50%">
+              {% else %}
+              <img src="https://freepngimg.com/thumb/emoji/2-2-grinning-face-emoji-png.png"
+                alt="image" class="img-fluid img-thumbnail mt-4 mb-2"
+                style="width: 150px; z-index: 1">
+              {% endif %}
+        <button class="edit_or_follow_btn">Edit profile</button>
+      </div>
+      <div class="names">
+        <div class="name">
+          <h2>{{ user_obj.name }}</h2>
+        </div>
+        <div class="user_name">
+          <h5>@{{ user_obj.user_name }}</h5>
+        </div>
+      </div>
+      <div class="followers_stat">
+
+
+        <table class="tabl">
+          <tr>
+            <td>
+              <h5>
+                <a href="/followers/{{ user_obj.user_name }}">Followers</a>
+              </h5>
+            </td>
+            <td>
+              <h5>
+                <a href="/following/{{ user_obj.user_name }}">Following</a>
+              </h5>
+            </td>
+          </tr>
+          <tr>
+            <td>{{ user_obj.followers|length }}</td>
+            <td>{{ user_obj.followings|length }}</td>
+          </tr>
+        </table>
+
+      </div>
+      <div class="about">
+        <h3>About</h3>
+        <p>{{ user_obj.about }}</p>
+
+      </div>
+    </div>
+    <div class="posts_section">
+
+            {% for i in user_obj.posts %}
+            <div class="row g-2">
+              <div class="col mb-2">
+                <img src="data:image/jpeg;base64, {{ base64.b64encode(i.img).decode('utf-8') }}"
+                  alt="image 1" class="w-100 rounded-3">
+                <p align="center">{{ i.title }}</p>
+              </div>
+              <div class="col mb-2">
+                <img src="data:image/jpeg;base64, {{ base64.b64encode(i.img).decode('utf-8') }}"
+                  alt="image 1" class="w-100 rounded-3">
+                <p align="center">{{ i.title }}</p>
+              </div>
+            </div>
+            {% endfor %}
+    </div>
+  </div>
+
+
+
+<style>
+
+.profile_section{
+  padding: 20px;
+  height: max-content;
+  box-shadow: 0px 0px 18px black;
+}
+.profile{
+  display: flex;
+}
+.edit_or_follow_btn{
+  height: min-content;
+  position:absolute;
+}
+.pic{
+  display: block;
+  border-radius: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.names{
+  text-align: center;
+  margin-top: 10px;
+}
+.followers_stat{
+  display: flex;
+  align-items: center;
+}
+td{
+  text-align: center;
+  padding-left: 25px;
+}
+table{
+  margin-left: auto;
+  margin-right: auto;
+
+}
+</style>
+
+
+
+
+
+{% endblock %}
