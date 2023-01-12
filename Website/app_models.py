@@ -40,7 +40,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(20), nullable=False)
     caption = db.Column(db.String(200))
-    img = db.Column(db.Text, unique=True)
+    img = db.Column(db.Text)
     mimetype = db.Column(db.Text)
     timestamp = db.Column(db.DateTime(timezone=True), default=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
