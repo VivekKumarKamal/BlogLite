@@ -11,6 +11,7 @@
 {% for a, b, c in lis %}
 
     <div class="searched_cont">
+        {% if a.profile_pic %}
         <a href="/profile/{{ a.user_name }}">
             <img src="data:image/jpeg;base64, {{ base64.b64encode(a.profile_pic).decode('utf-8') }}"
                 class="pic"
@@ -18,6 +19,13 @@
                 height="100px"
                 alt="Profile-Photo">
         </a>
+        {% else %}
+                <a href="/profile/{{ a.user_name }}">
+                  <img src="https://freepngimg.com/thumb/emoji/2-2-grinning-face-emoji-png.png"
+                    alt="image" class="pic"
+                       height="100px" width="100px">
+                    {% endif %}
+                </a>
         <div class="names">
             <p class="name">{{ a.name }}</p>
             <p class="user_name">{{ a.user_name }}</p>
