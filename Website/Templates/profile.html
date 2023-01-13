@@ -13,7 +13,7 @@
               {% else %}
               <img src="https://freepngimg.com/thumb/emoji/2-2-grinning-face-emoji-png.png"
                 alt="image" class="img-fluid img-thumbnail mt-4 mb-2"
-                style="width: 150px; z-index: 1">
+                style="width: 150px; height:150px; border-radius:50%">
               {% endif %}
         <button class="edit_or_follow_btn">Edit profile</button>
       </div>
@@ -57,19 +57,24 @@
     <br>
     <div class="posts_section">
         <h3>Posts</h3>
-            {% for i in user_obj.posts %}
+            {% for i in range(0, user_obj.posts|length, 2) %}
             <div class="row g-2">
               <div class="col mb-2">
-                <img src="data:image/jpeg;base64, {{ base64.b64encode(i.img).decode('utf-8') }}"
+                <img src="data:image/jpeg;base64, {{ base64.b64encode(user_obj.posts[i].img).decode('utf-8') }}"
                   alt="image 1" class="w-100 rounded-3">
-                <p align="center">{{ i.title }}</p>
+                <p align="center">{{ user_obj.posts[i].title }}</p>
               </div>
+                {% if i + 1 < user_obj.posts|length %}
               <div class="col mb-2">
-                <img src="data:image/jpeg;base64, {{ base64.b64encode(i.img).decode('utf-8') }}"
+                <img src="data:image/jpeg;base64, {{ base64.b64encode(user_obj.posts[i + 1].img).decode('utf-8') }}"
                   alt="image 1" class="w-100 rounded-3">
-                <p align="center">{{ i.title }}</p>
+                <p align="center">{{ user_obj.posts[i + 1].title }}</p>
               </div>
+                {% endif %}
             </div>
+
+            </div>
+
             {% endfor %}
     </div>
   </div>
