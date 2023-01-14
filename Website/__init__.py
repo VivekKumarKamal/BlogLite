@@ -1,4 +1,6 @@
 from flask import Flask
+from flask_restful import Resource, Api
+
 from flask_sqlalchemy import SQLAlchemy
 from markupsafe import escape
 from flask_login import LoginManager
@@ -13,7 +15,7 @@ def create_app():
     app.config['SECRET_KEY'] = "It's Vivek"
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
     db.init_app(app)
-
+    api = Api(app)
 
     login_manager = LoginManager()
     login_manager.login_view = 'app_auth.login'
@@ -35,4 +37,4 @@ def create_app():
     with app.app_context():
         db.create_all()
 
-    return app
+    return app, api
