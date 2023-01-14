@@ -10,6 +10,11 @@
 
 {% for a, b, c in lis %}
 
+<!-- a: User object(searched)
+     b: 0/1, 0 = not following, 1 = following
+     c: 0/Following object, 0=not following
+     -->
+
     <div class="searched_cont">
         {% if a.profile_pic %}
         <a href="/profile/{{ a.user_name }}">
@@ -91,6 +96,5 @@
 </style>
 {% endfor %}
 {% endif %}
-<!--</ul>-->
 
 {% endblock %}
