@@ -2,21 +2,23 @@
 {% block title %}Following{% endblock %}
 {% block content %}
 
-<h3>People you follow.</h3>
-<!--<h2>Hello!,{{ user.user_name }}</h2>-->
+<h3>People {{ user_obj.name }} follows</h3>
 
 
 <ul class="list-group list-group-flush" id="notes">
 
-    {% for flwg in user.followings %}
+    {% for flwg in user_obj.followings %}
     <li class="list-group-item d-flex justify-content-between align-items-center">
-        {{ user.user_name }}
-        {{ flwg.id }} {{ user.query.filter_by(id=flwg.following_id).first().name }}
-        {{ user.query.filter_by(id=flwg.following_id).first().user_name }}
 
-        <button type="button" onClick="unFollowFromFollowingPage('{{ flwg.id }}', '{{ user.user_name }}')">
+        <a href="/profile/{{ user_obj.query.filter_by(id=flwg.following_id).first().user_name }}">
+            {{ user_obj.query.filter_by(id=flwg.following_id).first().name }}
+        </a>
+        {% if current_user.id == user_obj.id %}
+        <button type="button" onClick="unFollowFromFollowingPage('{{ flwg.id }}', '{{ user_obj.user_name }}')">
             Unfollow
         </button>
+        {% endif %}
+
     </li>
     {% endfor %}
 

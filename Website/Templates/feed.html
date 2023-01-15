@@ -10,7 +10,7 @@
 <div class="just_post_cont">
         <div class="just_post_profile_section">
             <div class="profile">
-                {% if user.profile_pic %}
+                {% if post_obj.user.profile_pic %}
                 <a href="/profile/{{ User.query.filter_by(id=post_obj.user_id).first().user_name }}">
                     <img class="profile_pic" src="data:image/jpeg;base64, {{ base64.b64encode(User.query.filter_by(id=post_obj.user_id).first().profile_pic).decode('utf-8') }}" alt="" width="50px" height="50px">
                 </a>
@@ -139,9 +139,6 @@
                                                     data-toggle="dropdown"></button>
 
                                             <ul class="dropdown-menu dropdown-menu-right">
-                                                <li>
-                                                    <a class="dropdown-item" href="/delete-comment/{{ cmnt.id }}">Copy Comment</a>
-                                                </li>
                                                 {% if cmnt.commenter == current_user.id or cmnt.post.user_id == current_user.id %}
                                                 <li>
                                                     <a class="dropdown-item" href="/delete-comment/{{ cmnt.id }}">Delete</a>

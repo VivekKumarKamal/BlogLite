@@ -6,7 +6,7 @@
 <div class="main_section container">
     <div class="profile_section">
       <div class="profile">
-        {% if user.profile_pic %}
+        {% if user_obj.profile_pic %}
               <img src="data:image/jpeg;base64, {{ base64.b64encode(user_obj.profile_pic).decode('utf-8') }}"
                 alt="image" class="img-fluid img-thumbnail mt-4 mb-2"
                 style="width: 150px; z-index: 1; border-radius:50%">
@@ -15,7 +15,11 @@
                 alt="image" class="img-fluid img-thumbnail mt-4 mb-2"
                 style="width: 150px; height:150px; border-radius:50%">
               {% endif %}
-        <button class="edit_or_follow_btn">Edit profile</button>
+        {% if user_obj.id == current_user.id %}
+        <a href="/edit-profile/{{ user_obj.user_name }}" class="edit_btn">
+            <button class="edit_btnk">Edit Profile</button>
+        </a>
+        {% endif %}
       </div>
       <div class="names">
         <div class="name">
@@ -58,17 +62,31 @@
     <div class="posts_section">
         <h3>Posts</h3>
             {% for i in range(0, user_obj.posts|length, 2) %}
+
             <div class="row g-2">
               <div class="col mb-2">
-                <img src="data:image/jpeg;base64, {{ base64.b64encode(user_obj.posts[i].img).decode('utf-8') }}"
-                  alt="image 1" class="w-100 rounded-3">
-                <p align="center">{{ user_obj.posts[i].title }}</p>
+                <a href="/post/{{ user_obj.posts[i].id }}">
+                  <img src="data:image/jpeg;base64, {{ base64.b64encode(user_obj.posts[i].img).decode('utf-8') }}"
+                    alt="image 1" class="w-100 rounded-3"
+                    {% if user_obj.posts[i].hide == 1 %}
+                       style="opacity: 0.3;"
+                    {% endif %}
+                  >
+                    <p align="center">{{ user_obj.posts[i].title }}</p>
+                </a>
               </div>
                 {% if i + 1 < user_obj.posts|length %}
               <div class="col mb-2">
-                <img src="data:image/jpeg;base64, {{ base64.b64encode(user_obj.posts[i + 1].img).decode('utf-8') }}"
-                  alt="image 1" class="w-100 rounded-3">
-                <p align="center">{{ user_obj.posts[i + 1].title }}</p>
+                <a href="/post/{{ user_obj.posts[i + 1].id }}">
+                  <img src="data:image/jpeg;base64, {{ base64.b64encode(user_obj.posts[i + 1].img).decode('utf-8') }}"
+                    alt="image 1"
+                    class="w-100 rounded-3"
+                    {% if user_obj.posts[i + 1].hide == 1 %}
+                       style="opacity: 0.5;"
+                    {% endif %}
+                  >
+                    <p align="center">{{ user_obj.posts[i + 1].title }}</p>
+                </a>
               </div>
                 {% endif %}
             </div>
@@ -91,7 +109,7 @@
 .profile{
   display: flex;
 }
-.edit_or_follow_btn{
+.edit_btn{
   height: min-content;
   position:absolute;
 }

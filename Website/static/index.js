@@ -31,7 +31,7 @@ function deletePost(postId){
 }
 
 function hidePost(postId){
-    if (confirm("Are you sure you want to hide this Post")){
+    if (confirm("Are you sure you want to hide/show this Post")){
         fetch(`/hide-post-${postId}`)
         .then((_res) =>{
                 window.location.href ="/";
@@ -41,9 +41,10 @@ function hidePost(postId){
 
 
 function copyToClipboard(postId){
-    var link = `${window.location.href}post/${ postId }`;
+        var link = `${window.location.href}post/${ postId }`;
     // window.location.href gives the url of website
 
+    var link = `http://127.0.0.1:5000/post/${ postId }`;
     navigator.clipboard.writeText(link);
 
     alert("URL of the post copied to the clipboard:  " + link)

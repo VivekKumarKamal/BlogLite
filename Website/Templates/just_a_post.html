@@ -3,14 +3,19 @@
 {% block content %}
 
 
-
-
-
 <div class="just_post_cont">
         <div class="just_post_profile_section">
             <div class="profile">
+                {% if post_obj.user.profile_pic %}
                 <a href="/profile/{{ User.query.filter_by(id=post_obj.user_id).first().user_name }}">
-                    <img class="profile_pic" src="data:image/jpeg;base64, {{ image_data }}" alt="" width="50px" height="50px">
+                    <img class="profile_pic" src="data:image/jpeg;base64, {{ base64.b64encode(User.query.filter_by(id=post_obj.user_id).first().profile_pic).decode('utf-8') }}" alt="" width="50px" height="50px">
+                </a>
+                {% else %}
+                <a href="/profile/{{ User.query.filter_by(id=post_obj.user_id).first().user_name }}">
+                  <img src="https://freepngimg.com/thumb/emoji/2-2-grinning-face-emoji-png.png"
+                    alt="image" class="img-fluid img-thumbnail mt-4 mb-2"
+                    style="z-index: 1" height="50px" width="50px">
+                  {% endif %}
                 </a>
             </div>
             <div class="just_post_name">
@@ -33,7 +38,13 @@
                     <a class="dropdown-item" type="button" onclick="copyToClipboard({{ post_obj.id }})">Share</a>
                     {% if user.id == post_obj.user_id %}
                     <a class="dropdown-item" type="button" onClick="deletePost({{ post_obj.id }})">Delete</a>
-                    <a class="dropdown-item" type="button" onclick="hidePost({{ post_obj.id }})">Hide</a>
+                    <a class="dropdown-item" type="button" onclick="hidePost({{ post_obj.id }})">
+                        {% if post_obj.hide == 0 %}
+                            Hide
+                        {% else %}
+                            Show (Hidden)
+                        {% endif %}
+                    </a>
                     <a class="dropdown-item" type="button" href="/edit-post-{{ post_obj.id }}">Edit</a>
                     {% endif %}
                   </div>
@@ -65,7 +76,7 @@
         <div class="image_like_cmnt">
             <div>
                 <div class="title">{{ post_obj.title }}</div>
-                <img class="image" src="data:image/jpeg;base64, {{ image_data }}" alt="image" width="350px">
+                <img class="image" src="data:image/jpeg;base64, {{ base64.b64encode(post_obj.img).decode('utf-8') }}" alt="image" width="350px">
             </div>
 
             <div class="like_cmnt">
@@ -130,9 +141,6 @@
                                                     data-toggle="dropdown"></button>
 
                                             <ul class="dropdown-menu dropdown-menu-right">
-                                                <li>
-                                                    <a class="dropdown-item" href="/delete-comment/{{ cmnt.id }}">Copy Comment</a>
-                                                </li>
                                                 {% if cmnt.commenter == current_user.id or cmnt.post.user_id == current_user.id %}
                                                 <li>
                                                     <a class="dropdown-item" href="/delete-comment/{{ cmnt.id }}">Delete</a>
@@ -311,6 +319,5 @@
 }
 
 </style>
-
 
 {% endblock %}

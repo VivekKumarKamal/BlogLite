@@ -1,11 +1,10 @@
+import json
 
-from flask import Blueprint, render_template, flash, redirect, url_for, request, Response, jsonify
-from .app_models import User, Post, Like, Comment, Following, Follower, db, SearchForm
+from flask import Blueprint, render_template, flash, redirect, url_for, request, jsonify
+from .app_models import User, Post, Like, Comment, Following, Follower, db
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.utils import secure_filename
 from flask_login import login_user, login_required, logout_user, current_user
-from sqlalchemy.orm import Session
-from sqlalchemy import create_engine, select, exc, func
+from sqlalchemy import func
 from . import DB_NAME
 import imghdr
 import base64
@@ -78,41 +77,68 @@ def signup():
     return render_template('sign_up.html', user=current_user)
 
 
-# @app_auth.route('/profile', methods=['GET'])
-# @login_required
-# def profile():
-#     return render_template('profile.html')
-
-@app_auth.route('/followers/<user_name>', methods=['GET', 'POST'])
-@login_required
-def follower(user_name):
-    user = User.query.filter_by(user_name=user_name).first()
-    return render_template('followers_page.html', user=user)
-
-
-@app_auth.route('/following/<user_name>', methods=['GET', 'POST'])
-@login_required
-def following(user_name):
-    user = User.query.filter_by(user_name=user_name).first()
-    return render_template('following_page.html', user=user)
-
-
-@app_auth.route('/profile/<user_name>', methods=['GET', 'POST'])
-@login_required
-def profile(user_name):
-    user_obj = User.query.filter_by(user_name=user_name).first()
-
-    if user_obj:
-        return render_template('profile.html', base64=base64, user_obj=user_obj, user=current_user)
-    else:
-        return "This user does not exist"
-
-
 @app_auth.route('/log-out')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('app_auth.login'))
+
+
+@app_auth.route('/remove-follower', methods=['POST'])
+def remove_follower():
+    flwr = json.loads(request.data)
+    flwr_id = flwr['flwrId']
+    flwr = Follower.query.get(flwr_id)
+    if flwr:
+        # print(flwr)
+        if flwr.user_id == current_user.id:
+            db.session.delete(flwr)
+            db.session.commit()
+
+            flwg = Following.query.filter_by(following_id=current_user.id, user_id=flwr_id).first()
+            db.session.delete(flwg)
+            db.session.commit()
+        else:
+            flash("You cannot remove someone else's follower.", category='error')
+    return jsonify({})
+
+
+@app_auth.route('/unfollow', methods=['POST'])
+def unfollow():
+    flwg = json.loads(request.data)
+    flwg_id = flwg['flwgId']
+    flwg = Following.query.get(flwg_id)
+    if flwg:
+        if flwg.user_id == current_user.id:
+            db.session.delete(flwg)
+            db.session.commit()
+
+            flwr = Follower.query.filter_by(follower_id=current_user.id, user_id=flwg_id).first()
+            db.session.delete(flwr)
+            db.session.commit()
+        else:
+            flash("You cannot manage someone else's following.", category='error')
+
+    return jsonify({})
+
+
+@app_auth.route('/follow', methods=['POST'])
+def follow():
+        person = json.loads(request.data)
+        person_id = person['personId']
+        check_following = Following.query.filter_by(user_id=current_user.id, following_id=person_id).first()
+        if check_following:
+            return jsonify({})
+
+        new_following = Following(user_id=current_user.id, following_id=person_id)
+        db.session.add(new_following)
+        db.session.commit()
+
+        new_follower = Follower(user_id=person_id, follower_id=current_user.id)
+        db.session.add(new_follower)
+        db.session.commit()
+
+        return jsonify({})
 
 
 @app_auth.route('/search', methods=['GET', 'POST'])
@@ -196,22 +222,12 @@ def edit_post(post_id):
 
             image_data = base64.b64encode(post.img).decode('utf-8')
 
-            return render_template('just_a_post.html', User=User, Like=Like, user=current_user, post_obj=post, image_data=image_data)
-
-
-@app_auth.route('/post/<int:id>')
-@login_required
-def see_post(id):
-    post_obj = Post.query.filter_by(id=id).first()
-
-    if not post_obj or (post_obj.hide == 1 and current_user.id != post_obj.user_id):
-        flash("This post is hidden and only visible to the owner.", category='error')
-        return redirect(url_for('app_views.app_feed'))
-
-    return render_template('just_a_post.html',
-                           user=current_user,
-                           post=post_obj,
-                           )
+            return render_template('just_a_post.html',
+                                   User=User,
+                                   Like=Like, user=current_user,
+                                   post_obj=post,
+                                   image_data=image_data,
+                                   base64=base64)
 
 
 @app_auth.route("/delete-comment/<int:comment_id>")
@@ -220,7 +236,8 @@ def delete_comment(comment_id):
     cmnt = Comment.query.filter_by(id=comment_id).first()
     if cmnt:
         if cmnt.commenter != current_user.id and cmnt.post.user_id != current_user.id:
-            flash("Sorry! You are neither the commenter nor the owner of post, so you can't delete the comment.", category='error')
+            flash("Sorry! You are neither the commenter nor the owner of post, so you can't delete the comment.",
+                  category='error')
         else:
             db.session.delete(cmnt)
             db.session.commit()
@@ -254,10 +271,91 @@ def edit_profile(user_name):
                 mimetype = file.mimetype
                 user.profile_pic = file.read()
                 user.mimetype = mimetype
-                db.session.commit()
 
-            return render_template("profile.html", base64=base64, user=current_user, user_obj=current_user, user_name=user.user_name)
+            db.session.commit()
+
+
+            return render_template("profile.html",
+                                   base64=base64,
+                                   user=current_user,
+                                   user_obj=current_user,
+                                   user_name=user.user_name)
 
         return render_template("edit_profile.html", user=user)
 
 
+@app_auth.route('/like-post-<post_id>', methods=['POST'])
+@login_required
+def like(post_id):
+    post = Post.query.filter_by(id=post_id).first()
+    liked = Like.query.filter_by(liker_id=current_user.id, post_id=post_id).first()
+    print(liked)
+    val = False
+    if not post:
+        flash("Post not found", category='error')
+        return jsonify({'error': 'Post not found'}, 400)
+    elif liked:
+        db.session.delete(liked)
+        db.session.commit()
+    else:
+        liked = Like(liker_id=current_user.id, post_id=post_id)
+        db.session.add(liked)
+        db.session.commit()
+        val = True
+    return jsonify({"likes_count": len(post.likes), "liked": val})
+
+
+@app_auth.route("/hide-post-<post_id>")
+@login_required
+def hide_post(post_id):
+
+    post = Post.query.filter_by(id=post_id).first()
+    if current_user.id != post.user_id:
+        return "Any one other than Author cannot hide the post.", 404
+    if post.hide == 0:
+        post.hide = 1
+        flash('Post hidden Successfully', category='success')
+    else:
+        post.hide = 0
+        flash('Post is visible to others now', category='success')
+    db.session.commit()
+
+    return redirect(url_for('app_views.app_feed'))
+
+
+@app_auth.route("/delete-post-<post_id>", methods=["POST"])
+@login_required
+def delete_post(post_id):
+
+    post = Post.query.filter_by(id=post_id).first()
+    if current_user.id != post.user_id:
+        flash('Any one other than Author cannot delete the post.', category='error')
+    else:
+        for like in post.likes:
+            db.session.delete(like)
+            db.session.commit()
+        for comment in post.comments:
+            db.session.delete(comment)
+            db.session.commit()
+
+        db.session.delete(post)
+        db.session.commit()
+        flash("Post Deleted Successfully", category='success')
+    return redirect(url_for('app_views.app_feed'))
+
+
+@app_auth.route("/create-comment/<int:post_id>", methods=['POST'])
+@login_required
+def create_comment(post_id):
+    comment = request.form.get('comment')
+    if not comment:
+        flash("Comment cannot be empty.", category='error')
+    else:
+        post = Post.query.filter_by(id=post_id)
+        if post:
+            comment_obj = Comment(comment=comment, commenter=current_user.id, post_id=post_id)
+            db.session.add(comment_obj)
+            db.session.commit()
+        else:
+            flash("Post does not exit", category='error')
+    return redirect(url_for('app_views.app_feed'))

@@ -85,12 +85,12 @@
         </button>
         <div class="collapse navbar-collapse" id="navbar">
             <div class="navbar-nav">
-                {% if user.is_authenticated %}
+                {% if current_user.is_authenticated %}
                 <a href="/" class="nav-item nav-link navbar-brand me-auto">Blog Lite</a>
                 {% else %}
                 <p class="nav-item navbar-brand me-auto">BLOG Lite</p>
                 {% endif %}
-                {% if user.is_authenticated %}
+                {% if current_user.is_authenticated %}
                 <form class="navbar-nav mx-5" method="POST" action="{{ url_for('app_auth.search') }}">
 
                   <input class="form-control" required name="searched" type="search" placeholder="Search" aria-label="Search">
@@ -99,13 +99,13 @@
                 <ul class="navbar-nav ms-5">
 
                   <li class="nav-item">
-                    <a href="/{{ user.user_name }}/create-post" class="nav-link" >Upload</a>
+                    <a href="/{{ current_user.user_name }}/create-post" class="nav-link" >Upload</a>
                   </li>
                   <li class="nav-item">
                     <a href="/" class="nav-link" id="home">Home</a>
                   </li>
                   <li class="nav-item">
-                    <a href="/profile/{{ user.user_name }}" class="nav-link">Profile</a>
+                    <a href="/profile/{{ current_user.user_name }}" class="nav-link">Profile</a>
                   </li>
                   <li class="nav-item">
                     <a href="/log-out" class="nav-link" id="logout">Log Out</a>
