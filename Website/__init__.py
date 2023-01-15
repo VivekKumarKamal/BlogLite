@@ -28,9 +28,11 @@ def create_app():
 
     from .app_views import app_views
     from .app_auth import app_auth
+    from .api import api
 
     app.register_blueprint(app_views, url_prefix='/')
     app.register_blueprint(app_auth, url_index='/')
+    app.register_blueprint(api, url_index='/')
 
     from .app_models import User, Post, Like, Comment, Following, Follower
 

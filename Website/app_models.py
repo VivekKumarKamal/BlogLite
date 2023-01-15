@@ -5,7 +5,7 @@ from flask_wtf import FlaskForm
 from wtforms.validators import DataRequired
 from wtforms.widgets import TextArea
 from wtforms import StringField, SubmitField, PasswordField
-
+import base64
 from os import path
 
 
@@ -31,6 +31,18 @@ class User(db.Model, UserMixin):
     likes = db.relationship('Like', backref='user', passive_deletes=True)
     comments = db.relationship('Comment', backref='user', passive_deletes=True)
 
+    # this function is to convert user data into a dictionary
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'user_name': self.user_name,
+            'about': self.about,
+            'profile_pic': base64.b64encode(self.profile_pic).decode() if self.profile_pic else None,
+            'mimetype': self.mimetype if self.profile_pic else None,
+        }
+
 # backref: it references back means from likes we can access the user who liked,
 # if not put only can access likes form the user
 
@@ -40,7 +52,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(20), nullable=False)
     caption = db.Column(db.String(200))
-    img = db.Column(db.Text)
+    img = db.Column(db.LargeBinary)
     mimetype = db.Column(db.Text)
     timestamp = db.Column(db.DateTime(timezone=True), default=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
@@ -48,6 +60,17 @@ class Post(db.Model):
 
     likes = db.relationship('Like', backref='post', passive_deletes=True)
     comments = db.relationship('Comment', backref='post', passive_deletes=True)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'caption': self.caption,
+            'img': base64.b64encode(self.img).decode(),
+            'mimetype': self.mimetype,
+            'timestamp': self.timestamp,
+        }
+
 
 
 # In python the convention is to name the class in capital letter
@@ -59,6 +82,11 @@ class Like(db.Model):
     time = db.Column(db.DateTime(timezone=True), default=func.now())
     liker_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
 
+    # def to_dict(self):
+    #     return {
+    #         'liker_id': self.liker_id,
+    #         'time': self.time
+    #     }
 # ondelete cascade: Delete it when parent is deleted
 
 class Comment(db.Model):
@@ -68,6 +96,13 @@ class Comment(db.Model):
     commenter = db.Column(db.Integer, db.ForeignKey('user.id', ondelete="CASCADE"), nullable=False)
     comment = db.Column(db.String(150), nullable=False)
 
+
+    # def to_dict(self):
+    #     return {
+    #         'comment': self.comment,
+    #         'time': self.time,
+    #         'commenter': self.commenter
+    #     }
 
 class Following(db.Model):
     id = db.Column(db.Integer, primary_key=True)

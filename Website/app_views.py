@@ -73,3 +73,16 @@ def see_post(id):
 def base():
     form = SearchForm()
     return dict(form=form)
+
+
+@app_views.route('/api/followers/<user_name>', methods=['GET'])
+def follower_data(user_name):
+    user_obj = User.query.filter_by(user_name=user_name).first()
+
+    followers = user_obj.followers
+
+    return jsonify(followers)
+
+from flask import jsonify
+
+

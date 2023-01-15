@@ -51,7 +51,7 @@ def signup():
         confirm_password = request.form.get('confirm_password')
         # print(user_name, name)
         user = User.query.filter_by(user_name=user_name).first()
-        print(user)
+        # print(user)
 
         if user:
             flash("This user already exists. Log in", category='error')
