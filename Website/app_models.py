@@ -10,10 +10,6 @@ from os import path
 
 
 
-
-
-
-
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20))
@@ -44,7 +40,7 @@ class User(db.Model, UserMixin):
         }
 
 # backref: it references back means from likes we can access the user who liked,
-# if not put only can access likes form the user
+# if not put only can access likes form the user,,, not user from the like
 
 # passive_deletes: delete all the likes/comments when user is deleted,,,,,,works with the cascade thing below
 

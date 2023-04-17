@@ -1,4 +1,3 @@
-print("hello Sir")
 from replit import web
 from Website import create_app
 
